@@ -53,6 +53,10 @@ User = mongoose.model(
     isallowedtocreate: { type: Boolean, default: true },
     isallowedtoupdate: { type: Boolean, default: true },
     isblock: { type: Boolean, default: false },
+    coordinates: {
+      lat: { type: Number},
+      lon: { type: Number}
+    },
   })
 );
 
@@ -159,6 +163,7 @@ module.exports.authenticate = async (req, res, callback) => {
           isblock: 1,
           company: 1,
           branch: 1,
+          coordinates: 1
         },
       },
     ]);
