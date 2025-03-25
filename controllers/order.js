@@ -34,7 +34,6 @@ module.exports.checkout = async (req, res) => {
           },
         }))
     );
-    console.log("🚀 BulkOps: ", JSON.stringify(bulkOps, null, 2));
 
     req.bulkOps = bulkOps;
     req.body = {
