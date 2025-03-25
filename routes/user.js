@@ -137,4 +137,18 @@ router.post(
     secured: true,
   })
 ); //---------done
+
+router.get(
+  `/api/${base}/getCart`,
+  execute(controller.getCart, {
+    secured: true,
+  })
+); //---------done
+
+router.post(
+  `/api/${base}/addToCart`,
+  execute(controller.addToCart, {
+    secured: true,
+  })
+); //---------done
 module.exports = router;

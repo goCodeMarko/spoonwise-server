@@ -15,6 +15,7 @@ const padayon = require("../services/padayon"),
   { userAccessDTO, userDTO } = require("../services/dto"),
   email = require("./../services/email"),
   id_card = require("./../services/id_card"),
+  Product = require('./product'),
   cloudinary = require("./../services/cloudinary");
 
 module.exports.getUser = async (req, res) => {
@@ -515,5 +516,69 @@ module.exports.addUser = async (req, res) => {
     return response;
   } catch (error) {
     padayon.ErrorHandler("Controller::User::addUser", error, req, res);
+  }
+};
+
+
+
+module.exports.getCart = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+
+    const result = await model.getCart(req, res);
+    response.data = result;
+    
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler(
+      "Controller::User::getCart",
+      error,
+      req,
+      res
+    );
+  }
+};
+
+module.exports.addToCart = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+
+    req.params.id = req.body.lineItem.productId;
+    const productController = await Product.getProduct(req,res);
+
+    if(!productController.data){
+      throw new padayon.BadRequestException(`Product not found`);
+    }else {
+      if(productController.data.qty < req.body.lineItem.orderQty || req.body.lineItem.orderQty <= 0){
+        throw new padayon.BadRequestException(`Invalid order quantity. Ensure quantity is between 1 and ${productController.data.qty}.`, { currentProductStock:  productController.data.qty, _id: productController.data._id });
+      }
+    } 
+
+    const result = await model.addToCart(req, res);
+    response.data = result;
+    
+    return response;
+  } catch (error) {
+    console.error("Error Data:", error.data);   
+    padayon.ErrorHandler(
+      "Controller::User::addToCart",
+      error,
+      req,
+      res
+    );
+  }
+};
+
+
+module.exports.removeCheckedCartLineItems = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+    console.log(1)
+    const result = await model.removeCheckedCartLineItems(req,res);
+    console.log(2)
+    response.data = result;
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Controller::User::removeCheckedCartLineItems", error, req, res);
   }
 };

@@ -5,7 +5,39 @@ const path = require("path"),
   mongoose = require("mongoose"),
   padayon = require("../services/padayon"),
   bcrypt = require("bcrypt"),
-  _ = require('lodash'),
+  _ = require('lodash');
+
+
+  const LineItemSchema = new mongoose.Schema(
+    {
+      checked: { type: Boolean, default: true },
+      productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+      name: { type: String },
+      qty: { type: Number, default: 0 },
+      orderQty: { type: Number, default: 0 },
+      images: [{ type: String,default: []}],
+      expiryDate: { type: Date},
+      price: { type: Number, default: 0 }, 
+      description: { type: String,default: "" },
+      category: [{ type: String,default: []}],
+      specialOffers: [{ type: Object,default: []}]
+    },
+    { timestamps: true }
+  );
+
+  const StoreSchema = new mongoose.Schema(
+    {
+      checked: { type: Boolean, default: true },
+      shopId: { type: mongoose.Schema.Types.ObjectId, ref: 'Shop' },
+      businessName: { type: String },
+      coordinates: {
+        lat: { type: Number,default: "" },
+        lon: { type: Number,default: "" }
+      },
+      address1: { type: String,default: "" },
+      address2: { type: String,default: "" },
+    }
+  );
 
 User = mongoose.model(
   base,
@@ -57,6 +89,12 @@ User = mongoose.model(
       lat: { type: Number},
       lon: { type: Number}
     },
+    cart: [
+      { 
+        lineItems: [ LineItemSchema ],
+        shop: StoreSchema
+      }
+    ]
   })
 );
 
@@ -90,6 +128,8 @@ module.exports.getUser = async (req, res, callback) => {
           profile_picture: 1,
           company: 1,
           branch: 1,
+          coordinates: 1,
+          cart: 1
         },
       },
     ]);
@@ -163,7 +203,8 @@ module.exports.authenticate = async (req, res, callback) => {
           isblock: 1,
           company: 1,
           branch: 1,
-          coordinates: 1
+          coordinates: 1,
+          cart: 1
         },
       },
     ]);
@@ -328,3 +369,138 @@ module.exports.addUser = async (req, res, callback) => {
     padayon.ErrorHandler("Model::User::addUser", error, req, res);
   }
 }; //---------done
+
+
+module.exports.getCart = async (req, res) => {
+  try {
+    console.log('req.auth', req.auth)
+    
+    const MQLBuilder = [
+      { $project: { cart: 1}}
+         
+    ];
+
+    const [response] = await User.aggregate(MQLBuilder);
+
+    return response.cart;
+  } catch (error) {
+    padayon.ErrorHandler("Model::User::getCart", error, req, res);
+  }
+};
+
+
+module.exports.removeCheckedCartLineItems = async (req, res) => {
+  try {
+      console.log('--------------removeCheckedCartLineItems', req.auth._id)
+      const response = await User.updateOne(
+      {
+        _id: new mongoose.Types.ObjectId(req.auth._id), 
+        'cart.lineItems.checked': true, 
+      },
+      {
+        $pull: {
+          'cart.$[].lineItems': { checked: true },
+        },
+      }
+    );
+    console.log('--------------removeCheckedCartLineItems', response)
+    
+
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Model::User::removeCheckedCartLineItems", error, req, res);
+  }
+};
+
+module.exports.addToCart = async (req, res) => {
+  try {
+    let response;
+    
+    // Step 1: Check if the shop, and product already exist in the cart
+    const [cart] = await User.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(req.auth._id) } }, // Find the user
+      { $unwind: "$cart" }, // Deconstruct the cart array
+      { $match: { "cart.shop.shopId": new mongoose.Types.ObjectId(req.body.shop.shopId) } }, // Match the shop
+      {
+        $project: {
+          shop: "$cart.shop.shopId",
+          product: {
+            $arrayElemAt: [
+              {
+                $filter: {
+                  input: "$cart.lineItems",
+                  as: "item",
+                  cond: { $eq: ["$$item.productId", new mongoose.Types.ObjectId(req.body.lineItem.productId)] },
+                },
+              },
+              0,
+            ],
+          },
+        },
+      },
+    ]);
+ 
+     let shop = cart ?  cart : false;
+  
+      if(shop){
+        console.log("Shop Exists");
+        let product = shop.product ?  shop.product : false;
+       
+        if(product){
+          console.log("Product Exists");
+
+          response = await User.updateOne(
+            {
+              _id: new mongoose.Types.ObjectId(req.auth._id),
+              "cart.shop.shopId": new mongoose.Types.ObjectId(req.body.shop.shopId),
+              "cart.lineItems.productId": new mongoose.Types.ObjectId(req.body.lineItem.productId),
+            },
+            {
+              $set: {
+                "cart.$[shop].lineItems.$[item].orderQty": req.body.lineItem.orderQty,
+                "cart.$[shop].lineItems.$[item].checked": req.body.lineItem.checked,
+              },
+            },
+            {
+              arrayFilters: [
+                { "shop.shop.shopId":  new mongoose.Types.ObjectId(req.body.shop.shopId) },
+                { "item.productId": new mongoose.Types.ObjectId(req.body.lineItem.productId) },
+              ],
+            }
+          );
+        }else {
+          console.log("No Product Found");
+          response = await User.updateOne(
+            {
+              _id: new mongoose.Types.ObjectId(req.auth._id),
+              "cart.shop.shopId": new mongoose.Types.ObjectId(req.body.shop.shopId),
+            },
+            {
+              $push: {
+                "cart.$.lineItems": req.body.lineItem,
+              },
+            }
+          );
+        }
+      }else {
+        console.log("No Shop Found");
+        
+        response =await User.updateOne(
+          { _id: new mongoose.Types.ObjectId(req.auth._id) },
+          {
+            $push: {
+              cart: {
+                shop: req.body.shop,
+                lineItems: [req.body.lineItem],
+              },
+            },
+          }
+        );
+      }
+    
+
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Model::User::addToCart", error, req, res);
+  }
+};

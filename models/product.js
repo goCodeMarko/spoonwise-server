@@ -11,10 +11,11 @@ const padayon = require("../services/padayon"),
     mongoose.Schema({
     shopId: { type: mongoose.Schema.Types.ObjectId}, // 1-cashin 2-cashout
     name: { type: String,default: "" },
+    description: { type: String,default: "" },
     category: [{ type: mongoose.Schema.Types.ObjectId,default: []}],
     images: [{ type: String,default: []}],
     expiryDate: { type: Date},
-    qty: { type: String, default: "" },
+    qty: { type: Number, default: "" },
     price: { type: Number, default: 0 }, 
     specialOffers: [{ type: String,default: []}],
     isDeleted: { type: Boolean, default: false },
@@ -367,8 +368,9 @@ module.exports.getProducts = async (req, res) => {
 
   module.exports.getProduct = async (req, res) => {
     try {
+
       let prodId = req.params.id;
-      
+  
       const MQLBuilder = [
   
             {
@@ -493,7 +495,7 @@ module.exports.getProducts = async (req, res) => {
   
 
       const [product] = await Product.aggregate(MQLBuilder);
-      console.log('-------------product', product)
+
       return product;
     } catch (error) {
       padayon.ErrorHandler("Model::Product::getProduct", error, req, res);

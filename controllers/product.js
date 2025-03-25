@@ -42,8 +42,9 @@ const padayon = require("../services/padayon"),
   module.exports.getProduct = async (req, res) => {
     try {
       let response = { success: true, code: 200 };
-  
+      console.log('---------1')
       const result = await model.getProduct(req, res);
+      console.log('---------2')
       response.data = result;
         
       // if (_.size(result) === 0) {

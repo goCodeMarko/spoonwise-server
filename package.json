@@ -8,6 +8,7 @@
   "main": "index.js",
   "dependencies": {
     "@napi-rs/canvas": "^0.1.52",
+    "@ngrok/ngrok": "^1.4.1",
     "@socket.io/pm2": "^5.3.0",
     "axios": "^1.6.1",
     "bcrypt": "^5.0.1",
@@ -31,6 +32,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "node-cron": "^3.0.2",
+    "node-fetch": "^3.3.2",
     "nodemailer": "^6.9.7",
     "nodemailer-express-handlebars": "^6.1.0",
     "papaparse": "^5.4.1",
@@ -40,7 +42,8 @@
     "puppeteer": "^22.8.1",
     "qrcode": "^1.5.1",
     "socket.io": "^4.7.5",
-    "web-push": "^3.6.7"
+    "web-push": "^3.6.7",
+    "xendit-node": "^6.3.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"

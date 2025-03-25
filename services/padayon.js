@@ -64,6 +64,7 @@ module.exports.ErrorHandler = (area, error, req, res) => {
     error: {
       area,
       message: error.message,
+      data: error.data,
       type: error.name,
       __route: req.url,
       date,
@@ -196,9 +197,10 @@ module.exports.Init = {
 };
 
 module.exports.BadRequestException = class BadRequestException extends Error {
-  constructor(message) {
+  constructor(message, data = {}) {
     super(message);
     this.statusCode = 400;
+    this.data = data;
     this.name = "BadRequestException";
   }
 }; //---------done
