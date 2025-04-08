@@ -9,27 +9,28 @@ const mongoose = require("mongoose"),
   userController = require(`../controllers/user`),
   _ = require("lodash"),
   cron = require("./../services/cron"),
+  crypto = require('crypto'),
   { v4: uuidv4 } = require("uuid");
 
 module.exports.execute =
   (controller, options = {}) =>
-  async (req, res) => {
-    this.security(req, res, options, async (response) => {
-      if (response.success) {
-        req.timezone = req.headers["timezone"] ?? "Asia/Manila";
+    async (req, res) => {
+      this.security(req, res, options, async (response) => {
+        if (response.success) {
+          req.timezone = req.headers["timezone"] ?? "Asia/Manila";
 
-        req.auth = response.account;
-        try {
-          let data = await controller(req, res);
+          req.auth = response.account;
+          try {
+            let data = await controller(req, res);
 
-          const code = data?.code ?? 200;
-          const message = data ?? {};
+            const code = data?.code ?? 200;
+            const message = data ?? {};
 
-          res.status(code).send(message);
-        } catch (error) {}
-      }
-    });
-  }; //---------done
+            res.status(code).send(message);
+          } catch (error) { }
+        }
+      });
+    }; //---------done
 
 module.exports.getcurrentdate = () => {
   const date = new Date();
@@ -171,6 +172,16 @@ module.exports.uniqueId = (options = {}) => {
   }
   return uniqueId;
 }; //---------done
+
+module.exports.uniqueXenditExternalId = (options = {}) => {
+  const date = new Date();
+  const MMDDYY = `${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}${date.getFullYear().toString().slice(-2)}`;
+  const randomHex = crypto.randomBytes(3).toString('hex');
+  const uniqueId = randomHex + MMDDYY;
+  console.log('-------uniqueId', uniqueId)
+  return uniqueId;
+};
+
 module.exports.Init = {
   Mongoose: async () => {
     try {
@@ -187,12 +198,12 @@ module.exports.Init = {
     } catch (error) {
       console.log("\x1b[36m", `Unsuccessful Database Connection.`, error);
     }
-   
-  }, 
+
+  },
 
   CronJobs: () => {
     console.log("\x1b[36m", `Cronjob(s) Activated...`);
-    cron.run(); 
+    cron.run();
   }, //---------done
 };
 
@@ -222,3 +233,5 @@ module.exports.ForbiddenException = class ForbiddenException extends Error {
     this.name = "ForbiddenException";
   }
 }; //---------done
+
+

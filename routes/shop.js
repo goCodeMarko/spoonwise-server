@@ -24,4 +24,12 @@ router.get(
   })
 ); //---------done
 
+router.get(
+  `/api/${base}/getShop/:shopId`,
+  execute(controller.getShop, {
+    secured: true,
+    role: ["buyer", "admin"],
+  })
+); //---------done
+
 module.exports = router;

@@ -8,36 +8,36 @@ const path = require("path"),
   _ = require('lodash');
 
 
-  const LineItemSchema = new mongoose.Schema(
-    {
-      checked: { type: Boolean, default: true },
-      productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
-      name: { type: String },
-      qty: { type: Number, default: 0 },
-      orderQty: { type: Number, default: 0 },
-      images: [{ type: String,default: []}],
-      expiryDate: { type: Date},
-      price: { type: Number, default: 0 }, 
-      description: { type: String,default: "" },
-      category: [{ type: String,default: []}],
-      specialOffers: [{ type: Object,default: []}]
-    },
-    { timestamps: true }
-  );
+const LineItemSchema = new mongoose.Schema(
+  {
+    checked: { type: Boolean, default: true },
+    productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+    name: { type: String },
+    qty: { type: Number, default: 0 },
+    orderQty: { type: Number, default: 0 },
+    images: [{ type: String, default: [] }],
+    expiryDate: { type: Date },
+    price: { type: Number, default: 0 },
+    description: { type: String, default: "" },
+    category: [{ type: String, default: [] }],
+    specialOffers: [{ type: Object, default: [] }]
+  },
+  { timestamps: true }
+);
 
-  const StoreSchema = new mongoose.Schema(
-    {
-      checked: { type: Boolean, default: true },
-      shopId: { type: mongoose.Schema.Types.ObjectId, ref: 'Shop' },
-      businessName: { type: String },
-      coordinates: {
-        lat: { type: Number,default: "" },
-        lon: { type: Number,default: "" }
-      },
-      address1: { type: String,default: "" },
-      address2: { type: String,default: "" },
-    }
-  );
+const StoreSchema = new mongoose.Schema(
+  {
+    checked: { type: Boolean, default: true },
+    shopId: { type: mongoose.Schema.Types.ObjectId, ref: 'Shop' },
+    businessName: { type: String },
+    coordinates: {
+      lat: { type: Number, default: "" },
+      lon: { type: Number, default: "" }
+    },
+    address1: { type: String, default: "" },
+    address2: { type: String, default: "" },
+  }
+);
 
 User = mongoose.model(
   base,
@@ -79,6 +79,9 @@ User = mongoose.model(
       format: { type: String, maxlength: 25 },
       url: { type: String, maxlength: 150 },
     },
+    phoneNumber: { type: String },
+    address1: { type: String },
+    address2: { type: String },
     company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
     branch: { type: mongoose.Schema.Types.ObjectId },
     isallowedtodelete: { type: Boolean, default: true },
@@ -86,12 +89,12 @@ User = mongoose.model(
     isallowedtoupdate: { type: Boolean, default: true },
     isblock: { type: Boolean, default: false },
     coordinates: {
-      lat: { type: Number},
-      lon: { type: Number}
+      lat: { type: Number },
+      lon: { type: Number }
     },
     cart: [
-      { 
-        lineItems: [ LineItemSchema ],
+      {
+        lineItems: [LineItemSchema],
         shop: StoreSchema
       }
     ]
@@ -124,6 +127,9 @@ module.exports.getUser = async (req, res, callback) => {
           isblock: 1,
           id_card: 1,
           barcode: 1,
+          phoneNumber: 1,
+          address1: 1,
+          address2: 1,
           qrcode: 1,
           profile_picture: 1,
           company: 1,
@@ -200,6 +206,9 @@ module.exports.authenticate = async (req, res, callback) => {
           },
           password: 1,
           profile_picture: 1,
+          phoneNumber: 1,
+          address1: 1,
+          address2: 1,
           isblock: 1,
           company: 1,
           branch: 1,
@@ -209,14 +218,14 @@ module.exports.authenticate = async (req, res, callback) => {
       },
     ]);
 
-    if(_.size(account)){
+    if (_.size(account)) {
       const bcryptResult = await bcrypt.compare(password, account[0].password);
 
-      if(!bcryptResult) account = null;
+      if (!bcryptResult) account = null;
       else delete account[0].password;
-      
+
     }
-    
+
     response = account;
     callback(response);
   } catch (error) {
@@ -374,14 +383,68 @@ module.exports.addUser = async (req, res, callback) => {
 module.exports.getCart = async (req, res) => {
   try {
     console.log('req.auth', req.auth)
-    
+
     const MQLBuilder = [
-      { $project: { cart: 1}}
-         
-    ];
+      {
+        $unwind: {
+          path: "$cart"
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          shop: "$cart.shop",
+          lineItems: {
+            $map: {
+              input: "$cart.lineItems",
+              as: "item",
+              in: {
+                $mergeObjects: [
+                  "$$item",
+                  {
+                    commission: {
+                      $round: [
+                        { $multiply: ["$$item.orderQty", "$$item.price", 0.1] },
+                        2
+                      ]
+                    },
+                    points: {
+                      $round: [
+                        { $multiply: ["$$item.orderQty", "$$item.price", 0.01] },
+                        2
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      {
+        $group: {
+          _id: "$_id",
+          cart: {
+            $push: {
+              shop: "$shop",
+              lineItems: "$lineItems"
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          cart: 1
+        }
+      }
+    ]
+
 
     const [response] = await User.aggregate(MQLBuilder);
 
+
+    console.log('-----------x', response)
     return response.cart;
   } catch (error) {
     padayon.ErrorHandler("Model::User::getCart", error, req, res);
@@ -390,32 +453,39 @@ module.exports.getCart = async (req, res) => {
 
 
 module.exports.removeCheckedCartLineItems = async (req, res) => {
-  try {
-      console.log('--------------removeCheckedCartLineItems', req.auth._id)
-      const response = await User.updateOne(
-      {
-        _id: new mongoose.Types.ObjectId(req.auth._id), 
-        'cart.lineItems.checked': true, 
-      },
-      {
-        $pull: {
-          'cart.$[].lineItems': { checked: true },
-        },
-      }
-    );
-    console.log('--------------removeCheckedCartLineItems', response)
-    
 
-    return response;
-  } catch (error) {
-    padayon.ErrorHandler("Model::User::removeCheckedCartLineItems", error, req, res);
-  }
+  const removeCheckedLineItemInCart = await User.findOneAndUpdate(
+    {
+      _id: new mongoose.Types.ObjectId(req.auth._id),
+      'cart.lineItems.checked': true,
+    },
+    {
+      $pull: {
+        'cart.$[].lineItems': { checked: true },
+      },
+    },
+    { new: true }
+  );
+
+  const removeCartItemWithoutLineItem = await User.findOneAndUpdate(
+    {
+      _id: new mongoose.Types.ObjectId(req.auth._id),
+    },
+    {
+      $pull: {
+        cart: { lineItems: { $eq: [] } }, // Removes ALL carts where `lineItems` is an empty array
+      },
+    },
+    { new: true }
+  );
+
+  return removeCheckedLineItemInCart;
 };
 
 module.exports.addToCart = async (req, res) => {
   try {
     let response;
-    
+
     // Step 1: Check if the shop, and product already exist in the cart
     const [cart] = await User.aggregate([
       { $match: { _id: new mongoose.Types.ObjectId(req.auth._id) } }, // Find the user
@@ -439,65 +509,65 @@ module.exports.addToCart = async (req, res) => {
         },
       },
     ]);
- 
-     let shop = cart ?  cart : false;
-  
-      if(shop){
-        console.log("Shop Exists");
-        let product = shop.product ?  shop.product : false;
-       
-        if(product){
-          console.log("Product Exists");
 
-          response = await User.updateOne(
-            {
-              _id: new mongoose.Types.ObjectId(req.auth._id),
-              "cart.shop.shopId": new mongoose.Types.ObjectId(req.body.shop.shopId),
-              "cart.lineItems.productId": new mongoose.Types.ObjectId(req.body.lineItem.productId),
+    let shop = cart ? cart : false;
+
+    if (shop) {
+      console.log("Shop Exists");
+      let product = shop.product ? shop.product : false;
+
+      if (product) {
+        console.log("Product Exists");
+
+        response = await User.updateOne(
+          {
+            _id: new mongoose.Types.ObjectId(req.auth._id),
+            "cart.shop.shopId": new mongoose.Types.ObjectId(req.body.shop.shopId),
+            "cart.lineItems.productId": new mongoose.Types.ObjectId(req.body.lineItem.productId),
+          },
+          {
+            $set: {
+              "cart.$[shop].lineItems.$[item].orderQty": req.body.lineItem.orderQty,
+              "cart.$[shop].lineItems.$[item].checked": req.body.lineItem.checked,
             },
-            {
-              $set: {
-                "cart.$[shop].lineItems.$[item].orderQty": req.body.lineItem.orderQty,
-                "cart.$[shop].lineItems.$[item].checked": req.body.lineItem.checked,
-              },
-            },
-            {
-              arrayFilters: [
-                { "shop.shop.shopId":  new mongoose.Types.ObjectId(req.body.shop.shopId) },
-                { "item.productId": new mongoose.Types.ObjectId(req.body.lineItem.productId) },
-              ],
-            }
-          );
-        }else {
-          console.log("No Product Found");
-          response = await User.updateOne(
-            {
-              _id: new mongoose.Types.ObjectId(req.auth._id),
-              "cart.shop.shopId": new mongoose.Types.ObjectId(req.body.shop.shopId),
-            },
-            {
-              $push: {
-                "cart.$.lineItems": req.body.lineItem,
-              },
-            }
-          );
-        }
-      }else {
-        console.log("No Shop Found");
-        
-        response =await User.updateOne(
-          { _id: new mongoose.Types.ObjectId(req.auth._id) },
+          },
+          {
+            arrayFilters: [
+              { "shop.shop.shopId": new mongoose.Types.ObjectId(req.body.shop.shopId) },
+              { "item.productId": new mongoose.Types.ObjectId(req.body.lineItem.productId) },
+            ],
+          }
+        );
+      } else {
+        console.log("No Product Found");
+        response = await User.updateOne(
+          {
+            _id: new mongoose.Types.ObjectId(req.auth._id),
+            "cart.shop.shopId": new mongoose.Types.ObjectId(req.body.shop.shopId),
+          },
           {
             $push: {
-              cart: {
-                shop: req.body.shop,
-                lineItems: [req.body.lineItem],
-              },
+              "cart.$.lineItems": req.body.lineItem,
             },
           }
         );
       }
-    
+    } else {
+      console.log("No Shop Found");
+
+      response = await User.updateOne(
+        { _id: new mongoose.Types.ObjectId(req.auth._id) },
+        {
+          $push: {
+            cart: {
+              shop: req.body.shop,
+              lineItems: [req.body.lineItem],
+            },
+          },
+        }
+      );
+    }
+
 
     return response;
   } catch (error) {

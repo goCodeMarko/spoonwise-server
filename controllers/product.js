@@ -13,51 +13,68 @@ const padayon = require("../services/padayon"),
   email = require("./../services/email"),
   moment = require("moment-timezone"),
   companyController = require("./company"),
-   { ObjectId } = require("mongodb");
+  { ObjectId } = require("mongodb");
 
-  cloudinary = require("./../services/cloudinary");
+cloudinary = require("./../services/cloudinary");
 
-  module.exports.getProducts = async (req, res) => {
-    try {
-      let response = { success: true, code: 200 };
-  
-      const result = await model.getProducts(req, res);
-      response.data = result;
-        
-      // if (_.size(result) === 0) {
-      //   response.data = [];
-      // }
-  
-      return response;
-    } catch (error) {
-      padayon.ErrorHandler(
-        "Controller::Product::getProducts",
-        error,
-        req,
-        res
-      );
-    }
-  };
+module.exports.getProducts = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
 
-  module.exports.getProduct = async (req, res) => {
-    try {
-      let response = { success: true, code: 200 };
-      console.log('---------1')
-      const result = await model.getProduct(req, res);
-      console.log('---------2')
-      response.data = result;
-        
-      // if (_.size(result) === 0) {
-      //   response.data = [];
-      // }
-  
-      return response;
-    } catch (error) {
-      padayon.ErrorHandler(
-        "Controller::Product::getProduct",
-        error,
-        req,
-        res
-      );
-    }
-  };
+    const result = await model.getProducts(req, res);
+    response.data = result;
+
+    // if (_.size(result) === 0) {
+    //   response.data = [];
+    // }
+
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler(
+      "Controller::Product::getProducts",
+      error,
+      req,
+      res
+    );
+  }
+};
+
+module.exports.getProduct = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+    console.log('---------1')
+    const result = await model.getProduct(req, res);
+    console.log('---------2')
+    response.data = result;
+
+    // if (_.size(result) === 0) {
+    //   response.data = [];
+    // }
+
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler(
+      "Controller::Product::getProduct",
+      error,
+      req,
+      res
+    );
+  }
+};
+
+module.exports.bulkUpdateProductQty = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+    const result = await model.bulkUpdateProductQty(req, res);
+    response.data = result;
+
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler(
+      "Controller::Product::bulkUpdateProductQty",
+      error,
+      req,
+      res
+    );
+  }
+};

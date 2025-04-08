@@ -7,6 +7,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@lalamove/lalamove-js": "^1.1.0",
     "@napi-rs/canvas": "^0.1.52",
     "@ngrok/ngrok": "^1.4.1",
     "@socket.io/pm2": "^5.3.0",
