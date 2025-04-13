@@ -20,7 +20,7 @@ router.get(
   `/api/${base}/getSpecialOffers`,
   execute(controller.getSpecialOffers, {
     secured: true,
-    role: ["buyer", "admin"],
+    role: ["buyer", "admin", "seller"],
   })
 ); //---------done
 

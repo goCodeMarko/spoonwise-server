@@ -82,6 +82,7 @@ User = mongoose.model(
     phoneNumber: { type: String },
     address1: { type: String },
     address2: { type: String },
+    shop: { type: mongoose.Schema.Types.ObjectId, ref: 'Shop' },
     company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
     branch: { type: mongoose.Schema.Types.ObjectId },
     isallowedtodelete: { type: Boolean, default: true },
@@ -201,6 +202,7 @@ module.exports.authenticate = async (req, res, callback) => {
         $project: {
           email: 1,
           role: 1,
+          shop: 1,
           fullname: {
             $concat: ["$firstname", " ", "$lastname"],
           },

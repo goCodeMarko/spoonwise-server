@@ -4483,3 +4483,206 @@
 {"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-07-2025 01:10 AM"}}
 {"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-07-2025 01:11 AM"}}
 {"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-07-2025 01:11 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-08-2025 06:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 06:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-08-2025 06:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-08-2025 06:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-08-2025 06:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProducts?skip=0&limit=4","date":"04-08-2025 06:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-08-2025 06:42 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 06:42 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/transaction/getTransaction?startDate=2025-04-08T00:00:00&endDate=2025-04-08T23:59:59","date":"04-08-2025 06:42 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:31 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/transaction/getTransaction?startDate=2025-04-08T00:00:00&endDate=2025-04-08T23:59:59","date":"04-08-2025 09:31 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/shop/getShops","date":"04-08-2025 09:31 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-08-2025 09:31 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/specialOffer/getSpecialOffers","date":"04-08-2025 09:31 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/product/getProducts?skip=0&limit=4","date":"04-08-2025 09:31 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:32 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:32 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/transaction/getTransaction?startDate=2025-04-08T00:00:00&endDate=2025-04-08T23:59:59","date":"04-08-2025 09:32 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/transaction/getTransaction?startDate=2025-04-08T00:00:00&endDate=2025-04-08T23:59:59","date":"04-08-2025 09:34 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:34 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/shop/getShops","date":"04-08-2025 09:34 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-08-2025 09:34 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/specialOffer/getSpecialOffers","date":"04-08-2025 09:34 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/product/getProducts?skip=0&limit=4","date":"04-08-2025 09:34 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:35 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-08-2025 09:35 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/shop/getShops","date":"04-08-2025 09:35 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/specialOffer/getSpecialOffers","date":"04-08-2025 09:35 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/product/getProducts?skip=0&limit=4","date":"04-08-2025 09:35 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/product/getProducts?skip=0&limit=4&page=1","date":"04-08-2025 09:35 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:35 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:35 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:35 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/shop/getShops","date":"04-08-2025 09:35 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-08-2025 09:35 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/specialOffer/getSpecialOffers","date":"04-08-2025 09:35 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/product/getProducts?skip=0&limit=4","date":"04-08-2025 09:35 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:37 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/shop/getShops","date":"04-08-2025 09:37 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-08-2025 09:37 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/specialOffer/getSpecialOffers","date":"04-08-2025 09:37 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/product/getProducts?skip=0&limit=4","date":"04-08-2025 09:37 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/product/getProducts?skip=0&limit=4&page=1","date":"04-08-2025 09:37 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:37 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/shop/getShops","date":"04-08-2025 09:37 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-08-2025 09:37 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/product/getProducts?skip=0&limit=4&page=1","date":"04-08-2025 09:37 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/specialOffer/getSpecialOffers","date":"04-08-2025 09:37 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:37 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:37 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:38 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:39 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:39 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:40 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:40 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:45 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:46 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:47 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:47 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:47 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:49 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:49 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:49 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:50 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:51 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/order/getOrders/to_pay","date":"04-08-2025 09:51 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-08-2025 09:58 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-08-2025 09:58 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-08-2025 10:02 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-08-2025 10:03 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-09-2025 08:37 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-09-2025 09:09 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 01:11 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 03:44 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 04:37 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 07:36 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 07:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 08:02 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 08:05 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 08:50 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 08:51 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 08:53 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 08:54 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 08:55 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 08:55 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 08:56 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 08:57 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 08:57 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 08:57 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 08:57 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 08:58 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:00 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:02 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:04 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:04 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:05 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:05 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:06 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:06 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:07 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:07 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:07 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:08 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:08 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:08 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:09 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:09 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:09 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:09 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:09 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:09 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:10 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:10 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:12 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:12 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:13 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:13 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:14 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:16 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:21 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:23 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:23 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:25 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:27 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:27 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:28 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 09:28 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:27 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:27 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:30 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:38 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:38 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:38 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:38 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:40 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:40 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:40 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:40 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:40 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:40 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:40 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:42 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:42 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:44 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:45 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:47 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:47 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:50 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:54 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:55 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:55 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-10-2025 10:55 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"Cannot read properties of undefined (reading '0')","type":"TypeError","__route":"/api/product/createProduct","date":"04-12-2025 07:13 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"Cannot read properties of undefined (reading '0')","type":"TypeError","__route":"/api/product/createProduct","date":"04-12-2025 07:14 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"Cannot read properties of undefined (reading '0')","type":"TypeError","__route":"/api/product/createProduct","date":"04-12-2025 07:15 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"Cannot read properties of undefined (reading '0')","type":"TypeError","__route":"/api/product/createProduct","date":"04-12-2025 07:15 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"result is not defined","type":"ReferenceError","__route":"/api/product/createProduct","date":"04-12-2025 07:21 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"result is not defined","type":"ReferenceError","__route":"/api/product/createProduct","date":"04-12-2025 07:26 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"result is not defined","type":"ReferenceError","__route":"/api/product/createProduct","date":"04-12-2025 07:27 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"result is not defined","type":"ReferenceError","__route":"/api/product/createProduct","date":"04-12-2025 07:28 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"result is not defined","type":"ReferenceError","__route":"/api/product/createProduct","date":"04-12-2025 07:30 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"result is not defined","type":"ReferenceError","__route":"/api/product/createProduct","date":"04-12-2025 07:31 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"result is not defined","type":"ReferenceError","__route":"/api/product/createProduct","date":"04-12-2025 07:31 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"result is not defined","type":"ReferenceError","__route":"/api/product/createProduct","date":"04-12-2025 07:31 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"result is not defined","type":"ReferenceError","__route":"/api/product/createProduct","date":"04-12-2025 07:33 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"Cannot read properties of undefined (reading 'name')","type":"TypeError","__route":"/api/product/createProduct","date":"04-12-2025 07:34 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"Cannot read properties of undefined (reading 'name')","type":"TypeError","__route":"/api/product/createProduct","date":"04-12-2025 07:35 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"Cannot read properties of undefined (reading 'name')","type":"TypeError","__route":"/api/product/createProduct","date":"04-12-2025 07:36 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"Cannot read properties of undefined (reading 'url')","type":"TypeError","__route":"/api/product/createProduct","date":"04-12-2025 07:42 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"Cannot read properties of undefined (reading 'url')","type":"TypeError","__route":"/api/product/createProduct","date":"04-12-2025 07:44 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"Cannot read properties of undefined (reading 'url')","type":"TypeError","__route":"/api/product/createProduct","date":"04-12-2025 07:48 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"Cannot read properties of undefined (reading 'url')","type":"TypeError","__route":"/api/product/createProduct","date":"04-12-2025 07:52 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"Cannot read properties of undefined (reading 'url')","type":"TypeError","__route":"/api/product/createProduct","date":"04-12-2025 07:54 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"Cannot read properties of undefined (reading 'url')","type":"TypeError","__route":"/api/product/createProduct","date":"04-12-2025 07:55 PM"}}
+{"success":false,"error":{"area":"Controller::Product::createProduct","message":"Cannot read properties of undefined (reading 'url')","type":"TypeError","__route":"/api/product/createProduct","date":"04-12-2025 07:55 PM"}}
+{"success":false,"error":{"area":"Model::Product::createProduct","message":"product validation failed: category.0: Cast to [ObjectId] failed for value \"[ '10000', '10001' ]\" (type string) at path \"category.0\" because of \"CastError\"","type":"ValidationError","__route":"/api/product/createProduct","date":"04-12-2025 07:57 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-12-2025 08:07 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-12-2025 08:07 PM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-12-2025 08:19 PM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-12-2025 08:20 PM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-12-2025 08:20 PM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-12-2025 08:20 PM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-12-2025 09:39 PM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-12-2025 09:39 PM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-12-2025 09:43 PM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-12-2025 09:43 PM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-12-2025 09:46 PM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-12-2025 09:46 PM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-12-2025 09:47 PM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-12-2025 09:47 PM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-12-2025 09:50 PM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-12-2025 09:51 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-13-2025 08:09 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-13-2025 08:09 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-13-2025 08:09 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-13-2025 08:09 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-13-2025 08:10 PM"}}

@@ -9,15 +9,16 @@ const padayon = require("../services/padayon"),
 Product = mongoose.model(
   base,
   mongoose.Schema({
-    shopId: { type: mongoose.Schema.Types.ObjectId }, // 1-cashin 2-cashout
+    shopId: { type: mongoose.Schema.Types.ObjectId },
     name: { type: String, default: "" },
     description: { type: String, default: "" },
-    category: [{ type: mongoose.Schema.Types.ObjectId, default: [] }],
+    category: [{ type: String, default: [] }],
     images: [{ type: String, default: [] }],
     expiryDate: { type: Date },
     qty: { type: Number, default: "" },
     price: { type: Number, default: 0 },
     specialOffers: [{ type: String, default: [] }],
+    isOnline: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
   },
     { timestamps: true }
@@ -561,6 +562,26 @@ module.exports.bulkUpdateProductQty = async (req, res) => {
 
   return product;
 };
+
+
+module.exports.createProduct = async (req, res) => {
+  try {
+    const body = req.fnParams;
+
+    const product = new Product(body);
+
+    const result = await product.save();
+
+    response = result;
+  } catch (error) {
+    padayon.ErrorHandler(
+      "Model::Product::createProduct",
+      error,
+      req,
+      res
+    );
+  }
+}
 
 
 

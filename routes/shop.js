@@ -20,7 +20,7 @@ router.get(
   `/api/${base}/getShops`,
   execute(controller.getShops, {
     secured: true,
-    role: ["buyer", "admin"],
+    role: ["buyer", "admin", "seller"],
   })
 ); //---------done
 
@@ -28,7 +28,7 @@ router.get(
   `/api/${base}/getShop/:shopId`,
   execute(controller.getShop, {
     secured: true,
-    role: ["buyer", "admin"],
+    role: ["buyer", "admin", "seller"],
   })
 ); //---------done
 
