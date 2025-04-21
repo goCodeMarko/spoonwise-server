@@ -107,10 +107,7 @@
 
   app
     .use(requestLogger)
-    .use(cors({
-      origin: 'https://spoonwise.space', // or '*' for testing
-      credentials: true
-    }));
+    .use(cors())
     // .use(express.static(path.join(__dirname, clientFolder)))
     .use(bodyParser.json({ limit: "10mb" }))
     .use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
