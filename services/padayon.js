@@ -188,8 +188,7 @@ module.exports.Init = {
       await mongoose.connect(
         config.database,
         {
-          useUnifiedTopology: true,
-          useNewUrlParser: true,
+
         })
       console.log(
         "\x1b[36m",
