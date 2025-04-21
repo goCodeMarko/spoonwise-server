@@ -4686,3 +4686,287 @@
 {"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-13-2025 08:09 PM"}}
 {"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-13-2025 08:09 PM"}}
 {"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-13-2025 08:10 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-13-2025 10:17 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-13-2025 10:17 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/product/getProducts?skip=0&limit=4","date":"04-13-2025 10:17 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-14-2025 11:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-14-2025 11:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-14-2025 11:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-14-2025 11:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-14-2025 11:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-14-2025 11:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-14-2025 11:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-14-2025 11:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-14-2025 11:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-14-2025 11:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-14-2025 11:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-14-2025 11:41 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-14-2025 11:43 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-14-2025 11:44 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-14-2025 11:44 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-14-2025 11:44 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-14-2025 11:44 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-14-2025 11:44 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-14-2025 11:44 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-14-2025 11:55 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-14-2025 11:55 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-14-2025 11:55 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-14-2025 11:55 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-14-2025 11:55 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-14-2025 11:55 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-14-2025 11:56 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-14-2025 11:56 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-14-2025 11:56 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-14-2025 11:56 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-14-2025 11:56 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-14-2025 11:56 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-14-2025 11:57 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-14-2025 11:57 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-14-2025 11:57 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-14-2025 11:57 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-14-2025 11:57 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-14-2025 11:57 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 03:45 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-15-2025 03:45 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-15-2025 03:45 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-15-2025 03:45 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-15-2025 03:45 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-15-2025 03:45 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-15-2025 03:49 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 03:49 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-15-2025 03:49 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-15-2025 03:49 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-15-2025 03:49 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-15-2025 03:49 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-15-2025 03:53 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 03:53 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-15-2025 03:53 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-15-2025 03:53 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-15-2025 03:53 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-15-2025 03:53 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-15-2025 03:54 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 03:54 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-15-2025 03:54 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-15-2025 03:54 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-15-2025 03:54 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-15-2025 03:54 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-15-2025 03:54 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 03:54 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-15-2025 03:54 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-15-2025 03:54 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-15-2025 03:54 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-15-2025 03:54 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProduct/67e2b248662179641a8c5d17","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProducts?skip=0&limit=4","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/shop/getShops","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/category/getCategories","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/specialOffer/getSpecialOffers","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/product/getProducts?skip=0&limit=4","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 04:01 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-15-2025 04:02 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 04:02 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-15-2025 04:02 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 04:02 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-15-2025 04:52 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-15-2025 04:52 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-15-2025 04:53 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-15-2025 04:55 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-15-2025 04:55 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-15-2025 04:55 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"Restricted","type":"Error","__route":"/api/category/getCategories","date":"04-15-2025 04:56 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-15-2025 04:57 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 04:57 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getAuthUser","date":"04-15-2025 04:57 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-15-2025 04:58 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 04:58 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-15-2025 04:58 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 04:58 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getAuthUser","date":"04-15-2025 04:58 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-15-2025 04:58 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 04:58 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getAuthUser","date":"04-15-2025 04:58 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-15-2025 04:58 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-15-2025 04:58 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getAuthUser","date":"04-15-2025 04:58 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 05:06 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-18-2025 05:06 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getAuthUser","date":"04-18-2025 05:06 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-18-2025 05:06 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 05:06 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getAuthUser","date":"04-18-2025 05:06 AM"}}
+{"success":false,"error":{"area":"Controller::User::addToCart","message":"Product not found","data":{},"type":"BadRequestException","__route":"/api/user/addToCart","date":"04-18-2025 07:37 AM"}}
+{"success":false,"error":{"area":"Controller::User::addToCart","message":"Product not found","data":{},"type":"BadRequestException","__route":"/api/user/addToCart","date":"04-18-2025 07:37 AM"}}
+{"success":false,"error":{"area":"Controller::User::addToCart","message":"Product not found","data":{},"type":"BadRequestException","__route":"/api/user/addToCart","date":"04-18-2025 07:37 AM"}}
+{"success":false,"error":{"area":"Controller::User::addToCart","message":"Product not found","data":{},"type":"BadRequestException","__route":"/api/user/addToCart","date":"04-18-2025 07:37 AM"}}
+{"success":false,"error":{"area":"Controller::User::addToCart","message":"Product not found","data":{},"type":"BadRequestException","__route":"/api/user/addToCart","date":"04-18-2025 07:37 AM"}}
+{"success":false,"error":{"area":"Controller::User::addToCart","message":"Product not found","data":{},"type":"BadRequestException","__route":"/api/user/addToCart","date":"04-18-2025 07:37 AM"}}
+{"success":false,"error":{"area":"Controller::User::addToCart","message":"Product not found","data":{},"type":"BadRequestException","__route":"/api/user/addToCart","date":"04-18-2025 07:37 AM"}}
+{"success":false,"error":{"area":"Controller::User::addToCart","message":"Product not found","data":{},"type":"BadRequestException","__route":"/api/user/addToCart","date":"04-18-2025 07:37 AM"}}
+{"success":false,"error":{"area":"Controller::User::addToCart","message":"Product not found","data":{},"type":"BadRequestException","__route":"/api/user/addToCart","date":"04-18-2025 07:37 AM"}}
+{"success":false,"error":{"area":"Controller::User::addToCart","message":"Product not found","data":{},"type":"BadRequestException","__route":"/api/user/addToCart","date":"04-18-2025 07:37 AM"}}
+{"success":false,"error":{"area":"Controller::User::addToCart","message":"Product not found","data":{},"type":"BadRequestException","__route":"/api/user/addToCart","date":"04-18-2025 07:37 AM"}}
+{"success":false,"error":{"area":"Controller::User::addToCart","message":"Product not found","data":{},"type":"BadRequestException","__route":"/api/user/addToCart","date":"04-18-2025 07:37 AM"}}
+{"success":false,"error":{"area":"Controller::User::addToCart","message":"Product not found","data":{},"type":"BadRequestException","__route":"/api/user/addToCart","date":"04-18-2025 07:37 AM"}}
+{"success":false,"error":{"area":"Controller::User::addToCart","message":"Product not found","data":{},"type":"BadRequestException","__route":"/api/user/addToCart","date":"04-18-2025 07:37 AM"}}
+{"success":false,"error":{"area":"Controller::Order::lalamoveGetQuotation","message":"Please verify if you have made the request with the right credentials.","type":"Error","__route":"/api/order/lalamove/getQuotation?shopId=67ce88c38bb131e45c237691&orderId=67fa6cea2442b92b217e45c7","date":"04-18-2025 07:58 AM"}}
+{"success":false,"error":{"area":"Controller::Order::lalamoveGetQuotation","message":"Please verify if you have made the request with the right credentials.","type":"Error","__route":"/api/order/lalamove/getQuotation?shopId=67ce88c38bb131e45c237691&orderId=67fa6cea2442b92b217e45c7","date":"04-18-2025 07:58 AM"}}
+{"success":false,"error":{"area":"Controller::User::addToCart","message":"Product not found","data":{},"type":"BadRequestException","__route":"/api/user/addToCart","date":"04-18-2025 08:59 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:01 AM"}}
+{"success":false,"error":{"area":"Controller::Order::checkout","message":"fetch is not defined","type":"ReferenceError","__route":"/api/order/checkout","date":"04-18-2025 09:01 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:02 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:02 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:02 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:03 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:03 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:03 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:04 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:04 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:04 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:04 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:05 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:05 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:05 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:05 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:05 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:06 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:06 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:08 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:08 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:09 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:09 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:11 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:11 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:11 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:11 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:11 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:11 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:12 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:12 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:12 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:12 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:12 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:12 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:12 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:12 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:12 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:12 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:12 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:12 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:13 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:13 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:13 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:13 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:16 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:22 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:22 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:23 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:23 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:27 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:27 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:27 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:27 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:27 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:27 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:27 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:27 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:28 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:28 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:28 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:28 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:32 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:32 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:32 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:32 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:33 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:33 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:33 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:33 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:33 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:33 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:33 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:33 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:34 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:34 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:34 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:34 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:35 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:35 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:35 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:35 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:35 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:35 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:35 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:35 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:35 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:35 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:35 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:35 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:37 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:37 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:38 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:38 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:38 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:38 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:38 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:38 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-18-2025 09:38 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-18-2025 09:38 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:41 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:42 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:42 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:43 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:43 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:56 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:56 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:57 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:58 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:58 AM"}}
+{"success":false,"error":{"area":"Model::User::getCart","message":"Cannot read properties of undefined (reading 'cart')","type":"TypeError","__route":"/api/user/getCart","date":"04-18-2025 09:58 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-20-2025 07:22 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-20-2025 07:22 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getAuthUser","date":"04-20-2025 07:22 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/user/getCart","date":"04-20-2025 07:22 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"jwt expired","type":"TokenExpiredError","__route":"/api/order/getOrders/to_pay","date":"04-20-2025 07:22 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-20-2025 08:17 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-20-2025 08:17 AM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getCart","date":"04-21-2025 10:09 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/order/getOrders/to_pay","date":"04-21-2025 10:09 PM"}}
+{"success":false,"error":{"area":"Padayon::Utils::security","message":"No token found.","type":"UnauthorizedException","__route":"/api/user/getAuthUser","date":"04-21-2025 10:09 PM"}}

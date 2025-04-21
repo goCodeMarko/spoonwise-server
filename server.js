@@ -20,7 +20,7 @@
     //   port: 6379, // Redis port
     //   host: "127.0.0.1", // Redis host,
     // }),
-    title =  `
+    title = `
     ██████╗ ██████╗  ██████╗      ██╗███████╗ ██████╗████████╗    ███████╗██╗     ██╗      █████╗ 
     ██╔══██╗██╔══██╗██╔═══██╗     ██║██╔════╝██╔════╝╚══██╔══╝    ██╔════╝██║     ██║     ██╔══██╗
     ██████╔╝██████╔╝██║   ██║     ██║█████╗  ██║        ██║       █████╗  ██║     ██║     ███████║
@@ -33,8 +33,8 @@
   //   config.server.type == "local" ? "sandbox-client/client" : "public";
 
   Init.Mongoose();
-  
-  if(process.env.name === 'main-app' || process.env.CLUSTER_MODE === 'NO'){
+
+  if (process.env.name === 'main-app' || process.env.CLUSTER_MODE === 'NO') {
     // Init.CronJobs();
     console.log('Process Environment: ', process.env)
 
@@ -46,10 +46,10 @@
       VAPID_PUBLIC_KEY,
       VAPID_PRIVATE_KEY
     );
-  
+
     console.log('--------------webpush', webpush)
   }
-  
+
   module.exports.io = require("socket.io")(server, {
     cors: {
       origin: "*",
@@ -70,44 +70,47 @@
       console.log("A client disconnected");
     });
   });
-  
+
   //handlebars custom helpers
   hbs.registerHelper('formatDate', (date, format, timezone) => {
     return moment.utc(date).tz(timezone).format(format);
   });
   hbs.registerHelper('sum', (...numbers) => {
     numbers.pop();
-    const sum = numbers.reduce((a,b) => a + b, 0);
+    const sum = numbers.reduce((a, b) => a + b, 0);
     return sum.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
-  }) 
+  })
   hbs.registerHelper('currency', (cash) => {
     const currency = cash.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
     return currency;
-  }) 
+  })
   hbs.registerHelper('formatStatus', (status) => {
     let result = '';
     const css = "display: inline-block;padding: 4.2px 7.88px;border-radius: .375rem;font-size: 12px;"
     switch (status) {
       case 1:
         result = `<span style="${css}background-color: #f8f9fa;color: #000000;">Pending</span>`
-      break;
+        break;
       case 2:
         result = `<span style="${css}background-color: #0dcaf0;color: #000000;">Approved</span>`
-      break;
+        break;
       case 3:
         result = `<span style="${css}background-color: #dc3545;color: #ffffff;">Failed</span>`
-      break;
+        break;
       case 4:
         result = `<span style="${css}background-color: #6c757d;color: #ffffff;">Cancelled</span>`
-      break;
+        break;
     }
 
-    return  result; 
+    return result;
   });
-  
+
   app
     .use(requestLogger)
-    .use(cors())
+    .use(cors({
+      origin: 'https://spoonwise.space', // or '*' for testing
+      credentials: true
+    }));
     // .use(express.static(path.join(__dirname, clientFolder)))
     .use(bodyParser.json({ limit: "10mb" }))
     .use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
@@ -116,15 +119,15 @@
     .use(
       morgan(
         " :method :url :status " +
-          `pid: ${process.pid}` +
-          " :remote-addr - :remote-user [:date[clf]] - :response-time ms"
+        `pid: ${process.pid}` +
+        " :remote-addr - :remote-user [:date[clf]] - :response-time ms"
       )
     )
-  
+
     .use(routes)
-    
-  
-    .get('/', (req,res) => {
+
+
+    .get('/', (req, res) => {
       res.send(`<p style="font-style:verdana;">Welcome to GC Portal API!</p></br>
         <pre>powered by \n ${title}</pre>
       `);
@@ -137,7 +140,7 @@
     });
 
   server.listen(config.server.port, () => {
-    if(process.env.name === 'main-app' || process.env.CLUSTER_MODE === 'NO'){
+    if (process.env.name === 'main-app' || process.env.CLUSTER_MODE === 'NO') {
       console.log("\x1b[36m", title);
     }
     console.log(
