@@ -62,26 +62,7 @@ module.exports.getProducts = async (req, res) => {
           }
         }
       },
-      {
-        '$unwind': {
-          'path': '$specialOffers',
-          'preserveNullAndEmptyArrays': true
-        }
-      },
-      {
-        '$lookup': {
-          'from': 'specialoffers',
-          'localField': 'specialOffers',
-          'foreignField': 'id',
-          'as': 'specialOffers'
-        }
-      },
-      {
-        '$unwind': {
-          'path': '$specialOffers',
-          'preserveNullAndEmptyArrays': true
-        }
-      },
+
       {
         '$group': {
           '_id': '$_id',
@@ -107,7 +88,7 @@ module.exports.getProducts = async (req, res) => {
             '$first': '$price'
           },
           'specialOffers': {
-            '$push': '$specialOffers'
+            '$first': '$specialOffers'
           },
           'createdAt': {
             '$first': '$createdAt'
@@ -317,10 +298,10 @@ module.exports.getProducts = async (req, res) => {
     if (_.size(categories)) MQLBuilder.push({ $match: { category: { $in: categories } } });
 
     if (req.query.storeRating) MQLBuilder.push({ $match: { rating: { $gte: Number(req.query.storeRating) } } });
-
-    if (specialOffer) MQLBuilder.push({ $match: { specialOffers: { "$elemMatch": { id: specialOffer } } } });
+    console.log('=============specialOffer', specialOffer)
+    if (specialOffer) MQLBuilder.push({ $match: { specialOffers: { $in: [specialOffer] } } });
     if (radius) MQLBuilder.push({ $match: { distance: { $lte: radius } } });
-
+    console.log('--------')
     sortCriteria = {};
     sortCriteria[sort] = sortType;
     MQLBuilder.push({ $sort: sortCriteria });
