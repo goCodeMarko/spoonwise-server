@@ -385,7 +385,7 @@ module.exports.getOrders = async (req, res) => {
     ])
 
     response = result;
-    console.log('--------------resultxxxxxxxx', result)
+
     return response;
   } catch (error) {
     padayon.ErrorHandler(
@@ -400,38 +400,32 @@ module.exports.getOrders = async (req, res) => {
 module.exports.updateOrderStatus = async (req, res) => {
   try {
     let response = {};
-    console.log('-----req.body', req.body)
-    console.log('==========0')
+
     let matchStage = {
       '_id': new mongoose.Types.ObjectId(req.body.orderId),
       'cart.shopId': new mongoose.Types.ObjectId(req.body.shopId),
     }
-    console.log('==========1')
-    // if (!['BUYER_CANCELED', 'SELLER_CANCELED', ''].includes(req.body.status)) matchStage = { 'cart.lalamove.id': req.body.data.order.orderId };
-    console.log('==========2')
-    console.log('-----matchStage', matchStage)
-    // if(!){
-    //   matchStage = {
-    //     '_id': new mongoose.Types.ObjectId(req.body.orderId),
-    //     'cart.shopId': new mongoose.Types.ObjectId(req.body.shopId),
-    //   }
-    // }
+
     const updatedOrderStatus = await Order.findOneAndUpdate(
       matchStage,
       {
         $push: { 'cart.$.status': { status: req.body.status } }
+      },
+      {
+        new: true
       }
     );
-    console.log('-------------updatedOrderStatus', req.body.shopId)
-    console.log('-------------updatedOrderStatus', req.body.status)
-    console.log('-------------updatedOrderStatus', updatedOrderStatus)
+
     if (['BUYER_CANCELED', 'SELLER_CANCELED'].includes(req.body.status)) {
       req.bulkOps = await prepareBulkProdQtyUpdate(updatedOrderStatus.cart, 'increment');
+      req.params.status = 'CANCELLED';
       const bulkUpdateProductQtyRes = await productModel.bulkUpdateProductQty(req, res);
     }
 
-    response = updatedOrderStatus;
 
+
+    response = await this.getOrders(req, res)
+    console.log('responsexxxxxxxxxxxxxxxx', response)
     return response;
   } catch (error) {
     console.log('----------error', error)
@@ -600,7 +594,7 @@ module.exports.getOrder = async (req, res) => {
       }
     ];
     const [order] = await Order.aggregate(MQLBuilder);
-    console.log('---------------order', order)
+
     return order.cart;
   } catch (error) {
     padayon.ErrorHandler("Model::Order::getOrder", error, req, res);
