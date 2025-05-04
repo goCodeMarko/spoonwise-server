@@ -41,4 +41,13 @@ router.post(
   })
 ); //---------done
 
+
+router.put(
+  `/api/${base}/togglePublishStatus/:id`,
+  execute(controller.togglePublishStatus, {
+    secured: true,
+    role: ["seller"],
+  })
+); //---------done
+
 module.exports = router;

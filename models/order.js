@@ -1,10 +1,12 @@
 "use_strict";
 const padayon = require("../services/padayon"),
   path = require("path"),
+  _ = require("lodash"),
   base = path.basename(__filename).split(".").shift(),
   moment = require("moment-timezone"),
   userModel = require('./user'),
   productModel = require('./product'),
+  server = require('../server'),
   mongoose = require("mongoose");
 
 const LineItemSchema = new mongoose.Schema(
@@ -211,8 +213,21 @@ module.exports.updateOrder = async (req, res) => {
     if (req.body.status == 'EXPIRED' && result) {
 
       req.bulkOps = await prepareBulkProdQtyUpdate(result.cart, 'increment');
-      console.log('-------------------req.bulkOps', req.bulkOps)
       const bulkUpdateProductQtyRes = await productModel.bulkUpdateProductQty(req, res);
+
+      const shopIds = _.split(req.body.external_id, ',')
+
+      shopIds.forEach(shopId => {
+        server.io.to(shopId).emit('onExpirePaymentOrder', req.body);
+      })
+    }
+
+    if (req.body.status == 'PAID' && result) {
+      const shopIds = _.split(req.body.external_id, ',')
+
+      shopIds.forEach(shopId => {
+        server.io.to(shopId).emit('onExpirePaymentOrder', req.body);
+      })
     }
 
     await session.commitTransaction(); // ✅ If all operations succeed, commit the transaction
@@ -238,21 +253,24 @@ module.exports.updateOrder = async (req, res) => {
 module.exports.getOrders = async (req, res) => {
   try {
     let response = {};
+    let filter = {};
+    let filterSeller = {};
 
-    const matchStage = {};
-
-    if (req.auth.role === "buyer") matchStage.buyer = new mongoose.Types.ObjectId(req.auth._id);
-    else if (req.auth.role === "vendor") matchStage.vendor = new mongoose.Types.ObjectId(req.auth._id);
+    if (req.auth.role === "buyer") filter = { buyer: new mongoose.Types.ObjectId(req.auth._id) };
+    else if (req.auth.role === "seller") {
+      filter = { shops: { $in: [new mongoose.Types.ObjectId(req.auth.shop)] } };
+      filterSeller = { "cart.shopId": new mongoose.Types.ObjectId(req.auth.shop) };
+    }
 
 
     const result = await Order.aggregate([
-      {
-        '$match': matchStage
-      },
+      { $match: filter },
       {
         '$unwind': {
           'path': '$cart'
         }
+      }, {
+        $match: filterSeller
       }, {
         '$unwind': {
           'path': '$cart.lineItems',
@@ -326,6 +344,28 @@ module.exports.getOrders = async (req, res) => {
           }
         }
       }, {
+        $lookup: {
+          from: 'users',
+          localField: 'buyer',
+          foreignField: '_id',
+          pipeline: [
+            {
+              $project: {
+                name: { $concat: ['$firstname', ' ', '$lastname'] }
+              }
+            }
+          ],
+          as: 'buyer'
+        }
+      },
+      {
+        $unwind: {
+          'path': '$buyer',
+          'preserveNullAndEmptyArrays': true
+        }
+      },
+
+      {
         '$lookup': {
           'from': 'shops',
           'localField': 'shopId',
@@ -420,12 +460,13 @@ module.exports.updateOrderStatus = async (req, res) => {
       req.bulkOps = await prepareBulkProdQtyUpdate(updatedOrderStatus.cart, 'increment');
       req.params.status = 'CANCELLED';
       const bulkUpdateProductQtyRes = await productModel.bulkUpdateProductQty(req, res);
+    } else {
+      req.params.status = req.body.status;
     }
 
 
 
     response = await this.getOrders(req, res)
-    console.log('responsexxxxxxxxxxxxxxxx', response)
     return response;
   } catch (error) {
     console.log('----------error', error)

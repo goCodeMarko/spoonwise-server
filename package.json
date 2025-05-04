@@ -11,7 +11,7 @@
     "@napi-rs/canvas": "^0.1.52",
     "@ngrok/ngrok": "^1.4.1",
     "@socket.io/pm2": "^5.3.0",
-    "axios": "^1.6.1",
+    "axios": "^1.9.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.2",
     "cloudinary": "^1.31.0",

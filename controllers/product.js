@@ -101,7 +101,7 @@ module.exports.createProduct = async (req, res) => {
       description: body.description,
       category: body.category,
       specialOffers: body.specialOffers,
-      isOnline: body.online,
+      isPublish: body.online,
       images: uploads.map(img => img.secure_url)
     }
 
@@ -112,6 +112,32 @@ module.exports.createProduct = async (req, res) => {
   } catch (error) {
     padayon.ErrorHandler(
       "Controller::Product::createProduct",
+      error,
+      req,
+      res
+    );
+  }
+};
+
+module.exports.togglePublishStatus = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+    console.log('togglePublishStatus', req)
+    const { id } = req.params;
+    const { status } = req.body;
+
+    req.fnParams = {
+      id,
+      status
+    }
+
+    const result = await model.togglePublishStatus(req, res);
+    response.data = result;
+
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler(
+      "Controller::Product::togglePublishStatus",
       error,
       req,
       res

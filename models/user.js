@@ -384,7 +384,6 @@ module.exports.addUser = async (req, res, callback) => {
 
 module.exports.getCart = async (req, res) => {
   try {
-    console.log('req.auth', req.auth)
 
     const MQLBuilder = [
       {

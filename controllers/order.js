@@ -17,6 +17,8 @@ const padayon = require("../services/padayon"),
     )
   ),
   mongoose = require("mongoose"),
+  server = require('../server'),
+  axios = require('axios'),
   invoiceClient = new Invoice({ secretKey: process.env.XENDIT_SECRET });
 
 const prepareBulkProdQtyUpdate = async (cart, type) => {
@@ -42,19 +44,6 @@ module.exports.checkout = async (req, res) => {
     const externalId = padayon.uniqueXenditExternalId();
 
     let xedit;
-    if (req.body.paymentMethod == 'ONLINE') {
-      xedit = await invoiceClient.createInvoice({
-        data: {
-          "amount": req.body.totalPayment,
-          "invoiceDuration": 180,
-          "externalId": externalId,
-          "description": "Test Invoice",
-          "currency": "PHP",
-          "reminderTime": 1,
-          "successRedirectUrl": 'https://www.spoonwise.space/'
-        }
-      });
-    }
 
     let cart = req.body.cart.map((shop) => ({
       ...shop,
@@ -76,6 +65,20 @@ module.exports.checkout = async (req, res) => {
       totalPayment: req.body.totalPayment,
     }
 
+    if (req.body.paymentMethod == 'ONLINE') {
+      xedit = await invoiceClient.createInvoice({
+        data: {
+          "amount": req.body.totalPayment,
+          "invoiceDuration": 60,
+          "externalId": _.toString(shops),
+          "description": "Test Invoice",
+          "currency": "PHP",
+          "reminderTime": 1,
+          "successRedirectUrl": 'http://localhost:4888/profile'
+        }
+      });
+    }
+
     if (req.body.paymentMethod === 'ONLINE') {
       req.body.invoice = {
         "id": xedit.id,
@@ -89,10 +92,17 @@ module.exports.checkout = async (req, res) => {
         "url": xedit.invoiceUrl,
       }
     }
-    console.log('--------2')
+
     req.bulkOps = await prepareBulkProdQtyUpdate(cart, 'decrement');
 
     const checkoutRes = await model.checkout(req, res);
+    const socketId = req.headers['x-socket-id'];
+
+    checkoutRes.cart.forEach(lineitem => {
+      const shopId = lineitem.shopId.toString();
+
+      server.io.to(shopId).emit('onNewOrder', checkoutRes);
+    })
 
     response.data = checkoutRes;
     return response;
@@ -114,7 +124,6 @@ module.exports.webhookXenditInvoice = async (req, res) => {
     const token = req.headers["x-callback-token"];
 
     if (token !== process.env.XENDIT_CALLBACK_TOKEN) throw new padayon.UnauthorizedException("Unauthorized");
-
     let result = await model.updateOrder(req, res);
 
     response.data = result;
@@ -152,7 +161,25 @@ module.exports.updateOrderStatus = async (req, res) => {
   try {
     let response = { success: true, code: 201 };
 
+    if (req.body.status == 'CANCELED') {
+      req.body.status = req.auth.role == 'seller' ? "SELLER_CANCELED" : "BUYER_CANCELED";
+    }
+
     const result = await model.updateOrderStatus(req, res);
+
+    const buyerId = result[0].buyer._id.toString();
+    const shopId = result[0].shop._id.toString();
+
+
+    const socketId = req.headers['x-socket-id'];
+    console.log('socketId', socketId)
+
+    if (req.auth.role == 'seller') {
+      server.io.to(shopId).except(socketId).emit('onOrderListSocketUpdate', result);
+      server.io.to(buyerId).except(socketId).emit('onOrderListSocketUpdate', result);
+    } else {
+      server.io.to(shopId).emit('onOrderListSocketUpdate', result);
+    }
 
 
     response.data = result;
@@ -390,6 +417,7 @@ module.exports.webhookLalamove = async (req, res) => {
   try {
     let response = { success: true, code: 200 };
     console.log('-----------webhookLalamovexxxxxxxx', req.body)
+    await axios.post('https://fc01-180-191-106-180.ngrok-free.app/api/order/webhook/lalamove', req.body);
 
     if (req.body.eventType == 'ORDER_STATUS_CHANGED') {
       const body = req.body.data;

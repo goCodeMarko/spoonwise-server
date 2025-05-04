@@ -18,7 +18,7 @@ Product = mongoose.model(
     qty: { type: Number, default: "" },
     price: { type: Number, default: 0 },
     specialOffers: [{ type: String, default: [] }],
-    isOnline: { type: Boolean, default: true },
+    isPublish: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
   },
     { timestamps: true }
@@ -39,8 +39,6 @@ module.exports.getProducts = async (req, res) => {
       lat: req.auth.coordinates.lat,
       lon: req.auth.coordinates.lon
     }
-    console.log('skip', typeof skip)
-    console.log('req.query', req.query)
     switch (req.query.sort) {
       case 'nearest':
         sort = 'distance'
@@ -53,16 +51,18 @@ module.exports.getProducts = async (req, res) => {
     }
 
     const MQLBuilder = [
+    ];
 
-      {
-        $match:
-        {
-          qty: {
-            $gt: 0
-          }
+    if (req.auth.role == "seller") MQLBuilder.push({
+      $match: {
+        qty: {
+          $gt: 0
         }
-      },
+      }
+    });
+    if (req.auth.role == "seller") MQLBuilder.push({ $match: { shopId: new mongoose.Types.ObjectId(req.auth.shop) } });
 
+    MQLBuilder.push(
       {
         '$group': {
           '_id': '$_id',
@@ -98,41 +98,44 @@ module.exports.getProducts = async (req, res) => {
           },
           'description': {
             '$first': '$description'
-          }
-        }
-      }, {
-        '$lookup': {
-          from: "orders", // Collection name in MongoDB (usually lowercase and plural)
-          let: { shopId: "$shopId" },
-          pipeline: [
-            { $unwind: "$cart" },
-
-            {
-              $match: {
-                $expr: {
-                  $eq: ["$cart.shopId", "$$shopId"]
-                },
-                "cart.reviews.rate": { $gt: 0 }
-              }
-            },
-            {
-              $project: {
-                reviewRate: "$cart.reviews.rate"
-              }
-            }
-          ],
-          as: "productReviews"
-        }
-      }, {
-        '$addFields': {
-          'averageRating': {
-            '$avg': '$productReviews.reviewRate'
           },
-          'totalReviews': {
-            '$size': '$productReviews'
-          }
+          'isPublish': {
+            '$first': '$isPublish'
+          },
         }
-      },
+      }, {
+      '$lookup': {
+        from: "orders", // Collection name in MongoDB (usually lowercase and plural)
+        let: { shopId: "$shopId" },
+        pipeline: [
+          { $unwind: "$cart" },
+
+          {
+            $match: {
+              $expr: {
+                $eq: ["$cart.shopId", "$$shopId"]
+              },
+              "cart.reviews.rate": { $gt: 0 }
+            }
+          },
+          {
+            $project: {
+              reviewRate: "$cart.reviews.rate"
+            }
+          }
+        ],
+        as: "productReviews"
+      }
+    }, {
+      '$addFields': {
+        'averageRating': {
+          '$avg': '$productReviews.reviewRate'
+        },
+        'totalReviews': {
+          '$size': '$productReviews'
+        }
+      }
+    },
       {
         $lookup:
 
@@ -167,6 +170,7 @@ module.exports.getProducts = async (req, res) => {
           updatedAt: 1,
           description: 1,
           shop: 1,
+          isPublish: 1,
           rating: { $toDouble: { $ifNull: ["$averageRating", 0] } },
           reviews: '$totalReviews',
           distance: {
@@ -281,12 +285,10 @@ module.exports.getProducts = async (req, res) => {
           }
         }
       }, {
-        $set: {
-          distance: { $toDouble: '$distance' },
-        },
+      $set: {
+        distance: { $toDouble: '$distance' },
       },
-
-    ];
+    })
 
     let searchCriteria = {};
     searchCriteria['name'] = {
@@ -564,6 +566,31 @@ module.exports.createProduct = async (req, res) => {
   }
 }
 
+
+module.exports.togglePublishStatus = async (req, res) => {
+  try {
+    const body = req.fnParams;
+
+    const product = await Product.findOneAndUpdate(
+      {
+        _id: new mongoose.Types.ObjectId(body.id),
+      },
+      {
+        isPublish: body.status
+      },
+
+    );
+
+    response = product;
+  } catch (error) {
+    padayon.ErrorHandler(
+      "Model::Product::togglePublishStatus",
+      error,
+      req,
+      res
+    );
+  }
+}
 
 
 

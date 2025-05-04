@@ -57,19 +57,6 @@
     },
   });
 
-  this.io.on("connection", (socket) => {
-    const socketId = socket.id;
-    console.log(`A client id ${socketId} connected`);
-
-    socket.on("message", (message) => {
-      // Broadcast the message to all sockets except the sender
-      socket.broadcast.emit("message", message);
-    });
-
-    socket.on("disconnect", () => {
-      console.log("A client disconnected");
-    });
-  });
 
   //handlebars custom helpers
   hbs.registerHelper('formatDate', (date, format, timezone) => {
@@ -103,6 +90,29 @@
     }
 
     return result;
+  });
+
+
+  this.io.on("connection", (socket) => {
+    const socketId = socket.id;
+    const { userId, role, shopId } = socket.handshake.auth;
+
+    if (role == 'seller') {
+      socket.join(shopId);
+      console.log(`A seller shopid ${shopId} connected`);
+      console.log('---socketId', socketId)
+      console.log('---shopId', shopId)
+      console.log(socket.handshake.auth);
+    } else {
+      socket.join(userId);
+      console.log(`A buyer id ${userId} connected`);
+      console.log('---socketId', socketId)
+      console.log(socket.handshake.auth);
+    }
+
+    socket.on("disconnect", () => {
+      console.log(`A user id ${userId} disconnected`);
+    });
   });
 
   app
