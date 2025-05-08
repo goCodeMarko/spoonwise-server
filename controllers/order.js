@@ -173,6 +173,19 @@ module.exports.updateOrderStatus = async (req, res) => {
 
     const socketId = req.headers['x-socket-id'];
     console.log('socketId', socketId)
+    console.log('req.auth.role', req.auth.role)
+
+
+    for (const [roomName, socketsInRoom] of server.io.sockets.adapter.rooms) {
+      // Avoid showing default socket rooms (each socket is in a room named by its ID)
+      if (!io.sockets.adapter.sids.has(roomName)) {
+        console.log(`Room: ${roomName}`);
+        for (const socketId of socketsInRoom) {
+          console.log(`  Socket ID: ${socketId}`);
+        }
+      }
+    }
+
 
     if (req.auth.role == 'seller') {
       server.io.to(shopId).except(socketId).emit('onOrderListSocketUpdate', result);
