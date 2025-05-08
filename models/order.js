@@ -324,6 +324,9 @@ module.exports.getOrders = async (req, res) => {
           'invoice': {
             '$first': '$invoice'
           },
+          'lalamove': {
+            '$first': '$cart.lalamove'
+          },
           'shopId': {
             '$first': '$cart.shopId'
           },
@@ -401,6 +404,7 @@ module.exports.getOrders = async (req, res) => {
           'totalItems': 1,
           'status': 1,
           'invoice': 1,
+          'lalamove': 1,
           'shippingOption': 1,
           'latestStatus': {
             '$arrayElemAt': [
@@ -412,6 +416,11 @@ module.exports.getOrders = async (req, res) => {
                   }
                 }
               }, 0
+            ]
+          },
+          'latestLalamove': {
+            '$arrayElemAt': [
+              '$lalamove', -1
             ]
           }
         }
