@@ -177,9 +177,6 @@ module.exports.updateOrderStatus = async (req, res) => {
     const socketId = req.headers['x-socket-id'];
     console.log('socketId', socketId)
     console.log('req.auth.role', req.auth.role)
-    console.log('rooms', server.io.sockets.adapter.rooms)
-
-
 
     if (req.auth.role == 'seller') {
       server.io.to(shopId).except(socketId).emit('onOrderListSocketUpdate', result);
