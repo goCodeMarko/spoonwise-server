@@ -125,9 +125,7 @@ module.exports.webhookXenditInvoice = async (req, res) => {
 
     if (token !== process.env.XENDIT_CALLBACK_TOKEN) throw new padayon.UnauthorizedException("Unauthorized");
 
-    if (process.env.name === 'main-app' || process.env.CLUSTER_MODE === 'NO') {
-      let result = await model.updateOrder(req, res);
-    }
+    let result = await model.updateOrder(req, res);
 
     response.data = result;
     return response;
@@ -423,170 +421,168 @@ module.exports.webhookLalamove = async (req, res) => {
     let response = { success: true, code: 200 };
     console.log('-----------webhookLalamovexxxxxxxx', req.body)
 
-    if (process.env.name === 'main-app' || process.env.CLUSTER_MODE === 'NO') {
-      if (req.body.eventType == 'ORDER_STATUS_CHANGED') {
-        const body = req.body.data;
+    if (req.body.eventType == 'ORDER_STATUS_CHANGED') {
+      const body = req.body.data;
 
-        if (body.order.status == 'ASSIGNING_DRIVER' && (body.order.previousStatus == '' || ['CANCELLED', 'REJECTED', 'EXPIRED'].includes(body.order.previousStatus))) {
-          console.log('status-----------------ASSIGNING_DRIVER')
-          const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
+      if (body.order.status == 'ASSIGNING_DRIVER' && (body.order.previousStatus == '' || ['CANCELLED', 'REJECTED', 'EXPIRED'].includes(body.order.previousStatus))) {
+        console.log('status-----------------ASSIGNING_DRIVER')
+        const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
 
-          req.assigningDriverData = {
-            quotationId: orderFullDetails.quotationId,
-            priceBreakdown: orderFullDetails.priceBreakdown,
-            eventType: body.eventType,
-            eventVersion: body.eventVersion,
-            driver: [],
-            scheduleAt: '',
-            market: '',
-            driverId: '',
-            previousStatus: '',
-            shareLink: orderFullDetails.shareLink,
-            status: orderFullDetails.status,
-            distance: orderFullDetails.distance,
-            stops: orderFullDetails.stops,
-            metadata: orderFullDetails.metadata,
-            id: body.order.orderId
-          }
-
-          const addLalamoveDetails = await model.addLalamoveDetails(req, res);
-
-        } else if (body.order.status == 'ON_GOING' && body.order.previousStatus == 'ASSIGNING_DRIVER') {
-          const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
-
-          req.order = {
-            shopId: orderFullDetails.metadata.shopId,
-            orderId: body.order.orderId,
-            driverId: body.order.driverId,
-            scheduleAt: body.order.scheduleAt,
-            previousStatus: body.order.previousStatus,
-            market: body.order.market,
-            status: body.order.status,
-          }
-
-          const updateLalamoveDetails = await model.updateLalamoveDetails(req, res);
-        } else if (body.order.status == 'PICKED_UP' && body.order.previousStatus == 'ON_GOING') {
-          const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
-          server.io.to(orderFullDetails.metadata.shopId).emit('onLalamoveStatusChange', { role: 'seller', orderFullDetails, orderStatus: req.body.eventType });
-          server.io.to(orderFullDetails.metadata.buyerId).emit('onLalamoveStatusChange', { role: 'buyer', orderFullDetails, orderStatus: req.body.eventType });
-          req.order = {
-            shopId: orderFullDetails.metadata.shopId,
-            orderId: body.order.orderId,
-            driverId: body.order.driverId,
-            scheduleAt: body.order.scheduleAt,
-            previousStatus: body.order.previousStatus,
-            market: body.order.market,
-            status: body.order.status,
-          }
-
-          console.log('--------orderFullDetails2222', orderFullDetails)
-          req.isToUpdateShopOrderStatus = true;
-          req.body.shopId = orderFullDetails.metadata.shopId;
-          req.body.orderId = orderFullDetails.metadata.orderId;
-          req.body.status = 'TO_RECEIVE';
-          const updateLalamoveDetails = await model.updateLalamoveDetails(req, res);
-        } else if (((body.order.status == 'ASSIGNING_DRIVER' || body.order.status == 'REJECTED') && body.order.previousStatus == 'ON_GOING') || body.order.status == 'EXPIRED' && body.order.previousStatus == 'ASSIGNING_DRIVER') {
-          const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
-
-          req.order = {
-            shopId: orderFullDetails.metadata.shopId,
-            orderId: body.order.orderId,
-            driverId: '',
-            scheduleAt: '',
-            previousStatus: body.order.previousStatus,
-            market: '',
-            status: body.order.status,
-          }
-
-          const updateLalamoveDetails = await model.updateLalamoveDetails(req, res);
-        } else if (body.order.status == 'EXPIRED' && body.order.previousStatus == 'ASSIGNING_DRIVER') {
-          const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
-
-          req.order = {
-            shopId: orderFullDetails.metadata.shopId,
-            orderId: body.order.orderId,
-            driverId: '',
-            scheduleAt: '',
-            previousStatus: body.order.previousStatus,
-            market: '',
-            status: body.order.status,
-          }
-
-          const updateLalamoveDetails = await model.updateLalamoveDetails(req, res);
-        } else if (body.order.status == 'CANCELED' && body.order.previousStatus == 'PICKED_UP') {
-          const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
-
-          req.order = {
-            shopId: orderFullDetails.metadata.shopId,
-            orderId: body.order.orderId,
-            driverId: '',
-            scheduleAt: '',
-            previousStatus: body.order.previousStatus,
-            market: '',
-            status: body.order.status,
-          }
-
-          req.isToUpdateShopOrderStatus = true;
-          req.body.shopId = orderFullDetails.metadata.shopId;
-          req.body.status = 'FOR_DELIVERY';
-          const updateLalamoveDetails = await model.updateLalamoveDetails(req, res);
-        } else if (body.order.status == 'CANCELED') {
-          const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
-
-          req.order = {
-            shopId: orderFullDetails.metadata.shopId,
-            orderId: body.order.orderId,
-            driverId: '',
-            scheduleAt: '',
-            previousStatus: body.order.previousStatus,
-            market: '',
-            status: body.order.status,
-          }
-
-          const updateLalamoveDetails = await model.updateLalamoveDetails(req, res);
-        } else if (body.order.status == 'COMPLETED') {
-          console.log('----------------completed')
-          const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
-
-          req.order = {
-            shopId: orderFullDetails.metadata.shopId,
-            orderId: body.order.orderId,
-            driverId: body.order.driverId,
-            scheduleAt: body.order.scheduleAt,
-            previousStatus: body.order.previousStatus,
-            market: body.order.market,
-            status: body.order.status,
-          }
-          req.isToUpdateShopOrderStatus = true;
-          req.body.shopId = orderFullDetails.metadata.shopId;
-          req.body.status = 'TO_RECEIVE';
-          const updateLalamoveDetails = await model.updateLalamoveDetails(req, res);
-        }
-      }
-
-      if (req.body.eventType == 'DRIVER_ASSIGNED') {
-        console.log('eventType-----------------DRIVER_ASSIGNED', req.body)
-        const orderFullDetails = await lalamoveClient.Order.retrieve("PH", req.body.data.order.orderId);
-        console.log('========', orderFullDetails)
-        server.io.to(orderFullDetails.metadata.shopId).emit('onLalamoveStatusChange', { role: 'seller', orderFullDetails, orderStatus: req.body.eventType, driverPhone: req.body.data.driver.phone });
-        server.io.to(orderFullDetails.metadata.buyerId).emit('onLalamoveStatusChange', { role: 'buyer', orderFullDetails, orderStatus: req.body.eventType, driverPhone: req.body.data.driver.phone });
-
-        req.driver = {
-          orderId: req.body.data.order.orderId,
-          driverId: req.body.data.driver.driverId,
-          phone: req.body.data.driver.phone,
-          name: req.body.data.driver.name,
-          photo: req.body.data.driver.photo,
-          plateNumber: req.body.data.driver.plateNumber,
-          status: req.body.eventType,
-          updatedAt: req.body.data.updatedAt,
+        req.assigningDriverData = {
+          quotationId: orderFullDetails.quotationId,
+          priceBreakdown: orderFullDetails.priceBreakdown,
+          eventType: body.eventType,
+          eventVersion: body.eventVersion,
+          driver: [],
+          scheduleAt: '',
+          market: '',
+          driverId: '',
+          previousStatus: '',
+          shareLink: orderFullDetails.shareLink,
+          status: orderFullDetails.status,
+          distance: orderFullDetails.distance,
+          stops: orderFullDetails.stops,
+          metadata: orderFullDetails.metadata,
+          id: body.order.orderId
         }
 
+        const addLalamoveDetails = await model.addLalamoveDetails(req, res);
 
-        const addDriverToLalamoveDetails = await model.addDriverToLalamoveDetails(req, res);
+      } else if (body.order.status == 'ON_GOING' && body.order.previousStatus == 'ASSIGNING_DRIVER') {
+        const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
+
+        req.order = {
+          shopId: orderFullDetails.metadata.shopId,
+          orderId: body.order.orderId,
+          driverId: body.order.driverId,
+          scheduleAt: body.order.scheduleAt,
+          previousStatus: body.order.previousStatus,
+          market: body.order.market,
+          status: body.order.status,
+        }
+
+        const updateLalamoveDetails = await model.updateLalamoveDetails(req, res);
+      } else if (body.order.status == 'PICKED_UP' && body.order.previousStatus == 'ON_GOING') {
+        const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
+        server.io.to(orderFullDetails.metadata.shopId).emit('onLalamoveStatusChange', { role: 'seller', orderFullDetails, orderStatus: req.body.eventType });
+        server.io.to(orderFullDetails.metadata.buyerId).emit('onLalamoveStatusChange', { role: 'buyer', orderFullDetails, orderStatus: req.body.eventType });
+        req.order = {
+          shopId: orderFullDetails.metadata.shopId,
+          orderId: body.order.orderId,
+          driverId: body.order.driverId,
+          scheduleAt: body.order.scheduleAt,
+          previousStatus: body.order.previousStatus,
+          market: body.order.market,
+          status: body.order.status,
+        }
+
+        console.log('--------orderFullDetails2222', orderFullDetails)
+        req.isToUpdateShopOrderStatus = true;
+        req.body.shopId = orderFullDetails.metadata.shopId;
+        req.body.orderId = orderFullDetails.metadata.orderId;
+        req.body.status = 'TO_RECEIVE';
+        const updateLalamoveDetails = await model.updateLalamoveDetails(req, res);
+      } else if (((body.order.status == 'ASSIGNING_DRIVER' || body.order.status == 'REJECTED') && body.order.previousStatus == 'ON_GOING') || body.order.status == 'EXPIRED' && body.order.previousStatus == 'ASSIGNING_DRIVER') {
+        const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
+
+        req.order = {
+          shopId: orderFullDetails.metadata.shopId,
+          orderId: body.order.orderId,
+          driverId: '',
+          scheduleAt: '',
+          previousStatus: body.order.previousStatus,
+          market: '',
+          status: body.order.status,
+        }
+
+        const updateLalamoveDetails = await model.updateLalamoveDetails(req, res);
+      } else if (body.order.status == 'EXPIRED' && body.order.previousStatus == 'ASSIGNING_DRIVER') {
+        const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
+
+        req.order = {
+          shopId: orderFullDetails.metadata.shopId,
+          orderId: body.order.orderId,
+          driverId: '',
+          scheduleAt: '',
+          previousStatus: body.order.previousStatus,
+          market: '',
+          status: body.order.status,
+        }
+
+        const updateLalamoveDetails = await model.updateLalamoveDetails(req, res);
+      } else if (body.order.status == 'CANCELED' && body.order.previousStatus == 'PICKED_UP') {
+        const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
+
+        req.order = {
+          shopId: orderFullDetails.metadata.shopId,
+          orderId: body.order.orderId,
+          driverId: '',
+          scheduleAt: '',
+          previousStatus: body.order.previousStatus,
+          market: '',
+          status: body.order.status,
+        }
+
+        req.isToUpdateShopOrderStatus = true;
+        req.body.shopId = orderFullDetails.metadata.shopId;
+        req.body.status = 'FOR_DELIVERY';
+        const updateLalamoveDetails = await model.updateLalamoveDetails(req, res);
+      } else if (body.order.status == 'CANCELED') {
+        const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
+
+        req.order = {
+          shopId: orderFullDetails.metadata.shopId,
+          orderId: body.order.orderId,
+          driverId: '',
+          scheduleAt: '',
+          previousStatus: body.order.previousStatus,
+          market: '',
+          status: body.order.status,
+        }
+
+        const updateLalamoveDetails = await model.updateLalamoveDetails(req, res);
+      } else if (body.order.status == 'COMPLETED') {
+        console.log('----------------completed')
+        const orderFullDetails = await lalamoveClient.Order.retrieve("PH", body.order.orderId);
+
+        req.order = {
+          shopId: orderFullDetails.metadata.shopId,
+          orderId: body.order.orderId,
+          driverId: body.order.driverId,
+          scheduleAt: body.order.scheduleAt,
+          previousStatus: body.order.previousStatus,
+          market: body.order.market,
+          status: body.order.status,
+        }
+        req.isToUpdateShopOrderStatus = true;
+        req.body.shopId = orderFullDetails.metadata.shopId;
+        req.body.status = 'TO_RECEIVE';
+        const updateLalamoveDetails = await model.updateLalamoveDetails(req, res);
       }
-
     }
+
+    if (req.body.eventType == 'DRIVER_ASSIGNED') {
+      console.log('eventType-----------------DRIVER_ASSIGNED', req.body)
+      const orderFullDetails = await lalamoveClient.Order.retrieve("PH", req.body.data.order.orderId);
+      console.log('========', orderFullDetails)
+      server.io.to(orderFullDetails.metadata.shopId).emit('onLalamoveStatusChange', { role: 'seller', orderFullDetails, orderStatus: req.body.eventType, driverPhone: req.body.data.driver.phone });
+      server.io.to(orderFullDetails.metadata.buyerId).emit('onLalamoveStatusChange', { role: 'buyer', orderFullDetails, orderStatus: req.body.eventType, driverPhone: req.body.data.driver.phone });
+
+      req.driver = {
+        orderId: req.body.data.order.orderId,
+        driverId: req.body.data.driver.driverId,
+        phone: req.body.data.driver.phone,
+        name: req.body.data.driver.name,
+        photo: req.body.data.driver.photo,
+        plateNumber: req.body.data.driver.plateNumber,
+        status: req.body.eventType,
+        updatedAt: req.body.data.updatedAt,
+      }
+
+
+      const addDriverToLalamoveDetails = await model.addDriverToLalamoveDetails(req, res);
+    }
+
 
     return response;
   } catch (error) {

@@ -16,12 +16,14 @@ router.post(
   })
 ); //---------done
 
-router.post(
-  `/api/${base}/webhook/xendit/invoice`,
-  execute(controller.webhookXenditInvoice, {
-    secured: false
-  })
-); //---------done
+if (process.env.name === 'main-app' || process.env.CLUSTER_MODE === 'NO') {
+  router.post(
+    `/api/${base}/webhook/xendit/invoice`,
+    execute(controller.webhookXenditInvoice, {
+      secured: false
+    })
+  ); //---------done
+}
 
 router.get(
   `/api/${base}/getOrders/:status`,
@@ -50,12 +52,14 @@ router.post(
   })
 ); //---------done
 
-router.post(
-  `/api/${base}/webhook/lalamove`,
-  execute(controller.webhookLalamove, {
-    secured: false
-  })
-);
+if (process.env.name === 'main-app' || process.env.CLUSTER_MODE === 'NO') {
+  router.post(
+    `/api/${base}/webhook/lalamove`,
+    execute(controller.webhookLalamove, {
+      secured: false
+    })
+  );
+}
 
 router.get(
   `/api/${base}/getOrder`,
