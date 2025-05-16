@@ -179,7 +179,8 @@ module.exports.getChatrooms = async (req, res) => {
                                     product: "$product"
                                 },
                                 status: 1,
-                                createdAt: 1
+                                createdAt: 1,
+                                updatedAt: 1
                             }
                         },
                         {
