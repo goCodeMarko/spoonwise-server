@@ -1,11 +1,10 @@
 "use_strict";
 
-const { string } = require("joi");
-
 const padayon = require("../services/padayon"),
     path = require("path"),
     _ = require("lodash"),
     base = path.basename(__filename).split(".").shift(),
+    moment = require("moment-timezone"),
     mongoose = require("mongoose");
 
 Message = mongoose.model(
@@ -28,6 +27,49 @@ Message = mongoose.model(
 );
 
 Message.collection.createIndex({ "status": 1, "receiverId": 1, "senderId": 1 });
+
+
+module.exports.getPastMessages = async (req, res) => {
+    try {
+        let response = {};
+        let limit = 20;
+
+        const matchStage = {
+            chatroomId: new mongoose.Types.ObjectId(req.fnParams.chatroomId),
+            createdAt: { $lt: new Date(req.fnParams.lastMessageDate) }
+        };
+
+        const result = await Message.aggregate([
+            { $match: matchStage },
+            { $sort: { createdAt: -1 } },
+            { $limit: limit },
+            {
+                $project: {
+                    elementId: 1,
+                    chatroomId: 1,
+                    senderId: 1,
+                    receiverId: 1,
+                    content: 1,
+                    status: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                }
+            }
+        ]);
+
+        console.log('----result', result)
+
+        response = result;
+        return response;
+    } catch (error) {
+        padayon.ErrorHandler(
+            "Model::Message::getPastMessages",
+            error,
+            req,
+            res
+        );
+    }
+};
 
 
 module.exports.totalCountSentMessages = async (req, res) => {
@@ -61,6 +103,14 @@ module.exports.sendMessage = async (req, res) => {
         const message = new Message(body);
 
         const result = await message.save();
+
+        // Manually update the chatroom's updatedAt
+        const chatroom = await Chatroom.findByIdAndUpdate(
+            body.chatroomId,
+            { $set: { updatedAt: new Date() } }
+        );
+        console.log('result', result)
+        console.log('chatroom', chatroom.updatedAt)
 
         return result;
     } catch (error) {

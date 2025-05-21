@@ -7,6 +7,16 @@ const { execute } = require("../services/padayon"),
     router = express.Router(),
     controller = require(`../controllers/${base}`);
 
+
+
+router.get(
+    `/api/${base}/getPastMessages/:chatroomId`,
+    execute(controller.getPastMessages, {
+        secured: true,
+        role: ["buyer", "seller"],
+    })
+);
+
 router.get(
     `/api/${base}/totalCountSentMessages`,
     execute(controller.totalCountSentMessages, {

@@ -15,4 +15,12 @@ router.get(
     })
 );
 
+router.get(
+    `/api/${base}/getPastChatrooms`,
+    execute(controller.getPastChatrooms, {
+        secured: true,
+        role: ["buyer", "seller"],
+    })
+);
+
 module.exports = router;

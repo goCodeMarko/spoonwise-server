@@ -5,6 +5,31 @@ const padayon = require("../services/padayon"),
     model = require(`./../models/${base}`);
 
 
+module.exports.getPastChatrooms = async (req, res) => {
+    try {
+        let response = { success: true, code: 200 };
+
+        req.fnParams = {
+            ...req.query
+        }
+
+        console.log('req.fnParams', req.fnParams)
+
+        const pastChatrooms = await model.getPastChatrooms(req, res);
+
+        response.data = pastChatrooms
+
+        return response;
+    } catch (error) {
+        padayon.ErrorHandler(
+            "Controller::Message::getPastChatrooms",
+            error,
+            req,
+            res
+        );
+    }
+};
+
 module.exports.getChatrooms = async (req, res) => {
     try {
         let response = { success: true, code: 200 };
