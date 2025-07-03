@@ -6,24 +6,24 @@ const padayon = require("../services/padayon"),
   mongoose = require("mongoose"),
   _ = require("lodash");
 
-Product = mongoose.model(
-  base,
-  mongoose.Schema({
-    shopId: { type: mongoose.Schema.Types.ObjectId },
-    name: { type: String, default: "" },
-    description: { type: String, default: "" },
-    category: [{ type: String, default: [] }],
-    images: [{ type: String, default: [] }],
-    expiryDate: { type: Date },
-    qty: { type: Number, default: "" },
-    price: { type: Number, default: 0 },
-    specialOffers: [{ type: String, default: [] }],
-    isPublish: { type: Boolean, default: true },
-    isDeleted: { type: Boolean, default: false },
-  },
-    { timestamps: true }
-  )
-);
+const ProductSchema = new mongoose.Schema({
+  shopId: { type: mongoose.Schema.Types.ObjectId },
+  name: { type: String, default: "" },
+  description: { type: String, default: "" },
+  category: [{ type: String, default: [] }],
+  images: [{ type: String, default: [] }],
+  expiryDate: { type: Date },
+  qty: { type: Number, default: "" },
+  price: { type: Number, default: 0 },
+  specialOffers: [{ type: String, default: [] }],
+  isPublish: { type: Boolean, default: true },
+  isDeleted: { type: Boolean, default: false },
+}, {
+  timestamps: true
+});
+
+const Product = mongoose.model(base, ProductSchema);
+
 
 module.exports.getProducts = async (req, res) => {
   try {
@@ -36,8 +36,8 @@ module.exports.getProducts = async (req, res) => {
     let sort = 'createdAt';
     let sortType = -1;
     const coordinates = {
-      lat: req.auth.coordinates.lat,
-      lon: req.auth.coordinates.lon
+      lat: req.query.lat,
+      lng: req.query.lng
     }
     switch (req.query.sort) {
       case 'nearest':
@@ -60,7 +60,7 @@ module.exports.getProducts = async (req, res) => {
         }
       }
     });
-    if (req.auth.role == "seller") MQLBuilder.push({ $match: { shopId: new mongoose.Types.ObjectId(req.auth.shop) } });
+    if (req.auth.role == "seller") MQLBuilder.push({ $match: { shopId: new mongoose.Types.ObjectId(req.auth.shop?._id) } });
 
     MQLBuilder.push(
       {
@@ -188,7 +188,7 @@ module.exports.getProducts = async (req, res) => {
                                 $multiply: [
                                   {
                                     $divide: [
-                                      coordinates.lat,
+                                      { $toDouble: coordinates.lat },
                                       180
                                     ]
                                   },
@@ -201,7 +201,7 @@ module.exports.getProducts = async (req, res) => {
                                 $multiply: [
                                   {
                                     $divide: [
-                                      "$shop.coordinates.lat",
+                                      { $toDouble: "$shop.coordinates.lat" },
                                       180
                                     ]
                                   },
@@ -218,7 +218,7 @@ module.exports.getProducts = async (req, res) => {
                                 $multiply: [
                                   {
                                     $divide: [
-                                      coordinates.lat,
+                                      { $toDouble: coordinates.lat },
                                       180
                                     ]
                                   },
@@ -231,7 +231,7 @@ module.exports.getProducts = async (req, res) => {
                                 $multiply: [
                                   {
                                     $divide: [
-                                      "$shop.coordinates.lat",
+                                      { $toDouble: "$shop.coordinates.lat" },
                                       180
                                     ]
                                   },
@@ -249,7 +249,7 @@ module.exports.getProducts = async (req, res) => {
                                           {
                                             $divide:
                                               [
-                                                coordinates.lon,
+                                                { $toDouble: coordinates.lng },
                                                 180
                                               ]
                                           },
@@ -261,7 +261,7 @@ module.exports.getProducts = async (req, res) => {
                                           {
                                             $divide:
                                               [
-                                                "$shop.coordinates.lon",
+                                                { $toDouble: "$shop.coordinates.lng" },
                                                 180
                                               ]
                                           },
@@ -308,7 +308,7 @@ module.exports.getProducts = async (req, res) => {
     sortCriteria[sort] = sortType;
     MQLBuilder.push({ $sort: sortCriteria });
 
-
+    console.log('5345345', req.auth)
     MQLBuilder.push(
       {
         $facet: {
@@ -358,7 +358,7 @@ module.exports.getProducts = async (req, res) => {
     );
 
     const [products] = await Product.aggregate(MQLBuilder);
-
+    console.log('5345345', products)
     return products;
   } catch (error) {
     padayon.ErrorHandler("Model::Product::getProducts", error, req, res);

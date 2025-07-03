@@ -43,43 +43,49 @@ module.exports.notify = async (recipient, template, data = {}) => {
   );
 
   const mail = {
+    headers: {
+      "X-Priority": "1 (Highest)",
+      "X-MSMail-Priority": "High",
+      Importance: "High"
+    },
+
     from: `"Kuweba Software Solutions" <${username}>`,
     to: recipient,
     subject: data.header,
-    template: template, 
+    template: template,
     attachments: [
       {
         filename: "email_banner.png",
         path: process.cwd() + `/assets/images/${data.banner}.png`,
         cid: "email_banner",
       },
-      {
-        filename: "facebook-icon.png",
-        path: process.cwd() + "/assets/images/icons/facebook-icon.png",
-        cid: "facebook-icon",
-      },
-      {
-        filename: "instagram-icon.png",
-        path: process.cwd() + "/assets/images/icons/instagram-icon.png",
-        cid: "instagram-icon",
-      },
-      {
-        filename: "youtube-icon.png",
-        path: process.cwd() + "/assets/images/icons/youtube-icon.png",
-        cid: "youtube-icon",
-      },
-     
+      // {
+      //   filename: "facebook-icon.png",
+      //   path: process.cwd() + "/assets/images/icons/facebook-icon.png",
+      //   cid: "facebook-icon",
+      // },
+      // {
+      //   filename: "instagram-icon.png",
+      //   path: process.cwd() + "/assets/images/icons/instagram-icon.png",
+      //   cid: "instagram-icon",
+      // },
+      // {
+      //   filename: "youtube-icon.png",
+      //   path: process.cwd() + "/assets/images/icons/youtube-icon.png",
+      //   cid: "youtube-icon",
+      // },
+
     ],
     context: {
       ...data,
     },
   };
 
-  if(_.size(data.attachments)){
+  if (_.size(data.attachments)) {
     mail.attachments.push(...data.attachments)
   }
-  
-  const result = await transporter.sendMail(mail);  
+
+  const result = await transporter.sendMail(mail);
   transporter.close();
   return result;
 };

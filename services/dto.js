@@ -182,5 +182,149 @@ module.exports.userDTO = Joi.object({
   password: Joi.string().required().messages({
     "number.base": `"password" should be a type of "string"`,
     "number.empty": `"password" cannot be an empty field`,
+  }),
+});
+
+const objectIdPattern = /^[0-9a-fA-F]{24}$/;
+module.exports.addUserDTO = Joi.object({
+  email: Joi.string().email().required().messages({
+    "string.base": `"email" should be a type of "email"`,
+    "string.empty": `"email" cannot be an empty field`,
+  }),
+  password: Joi.string().required().messages({
+    "number.base": `"password" should be a type of "string"`,
+    "number.empty": `"password" cannot be an empty field`,
+  }),
+  firstname: Joi.string().required().messages({
+    "string.base": `"First Name" should be a type of "string"`,
+    "string.empty": `"First Name" cannot be an empty field`,
+  }),
+  lastname: Joi.string().required().messages({
+    "string.base": `"Last Name" should be a type of "string"`,
+    "string.empty": `"Last Name" cannot be an empty field`,
+  }),
+  role: Joi.string().required().messages({
+    "string.base": `"Role" should be a type of "string"`,
+    "string.empty": `"Role" cannot be an empty field`,
+  }),
+  shop: Joi.string().pattern(objectIdPattern).required().messages({
+    "string.pattern.base": `"Shop" must be a valid MongoDB ObjectId`,
+    "string.base": `"Shop" should be a type of "string"`,
+    "string.empty": `"Shop" cannot be an empty field`,
+  }),
+  shop: Joi.any().optional().messages({
+    "any.required": `"Shop" is required`,
   })
+});
+
+
+module.exports.saveAsDraftTab2DTO = Joi.object({
+  coordinates: Joi.object({
+    lat: Joi.string().required().messages({
+      "string.base": `"Latitude" should be a type of "string"`,
+      "string.empty": `"Latitude" cannot be an empty field`,
+      "any.required": `"Latitude" is required`
+    }),
+    lng: Joi.string().required().messages({
+      "string.base": `"Longitude" should be a type of "string"`,
+      "string.empty": `"Longitude" cannot be an empty field`,
+      "any.required": `"Longitude" is required`
+    }),
+  }).required().messages({
+    "object.base": `"Coordinates" must be an object`,
+    "any.required": `"Coordinates" field is required`,
+  }),
+
+  province: Joi.string().optional().messages({
+    "string.base": `"Province" must be a string`,
+    "string.empty": `"Province" cannot be an empty field`,
+    "any.required": `"Province" is required`
+  }),
+
+  municipality: Joi.string().optional().messages({
+    "string.base": `"Municipality" must be a string`,
+    "string.empty": `"Municipality" cannot be an empty field`,
+    "any.required": `"Municipality" is required`
+  }),
+
+  barangay: Joi.string().optional().messages({
+    "string.base": `"Barangay" must be a string`,
+    "string.empty": `"Barangay" cannot be an empty field`,
+    "any.required": `"Barangay" is required`
+  }),
+
+  address: Joi.string().optional().messages({
+    "string.base": `"Address" must be a string`,
+    "string.empty": `"Address" cannot be an empty field`,
+    "any.required": `"Address" is required`
+  }),
+
+  phoneNumber: Joi.string().pattern(/^9\d{9}$/).optional().messages({
+    "string.pattern.base": `"Phone Number" must start with 9 and be exactly 10 digits`,
+    "string.base": `"Phone Number" must be a string`,
+    "string.empty": `"Phone Number" cannot be an empty field`,
+    "any.required": `"Phone Number" is required`
+  })
+})
+
+module.exports.saveAsDraftTab3DTO = Joi.object({
+  accountName: Joi.string().optional().messages({
+    "string.base": `"Name" must be a string`,
+    "string.empty": `"Name" cannot be an empty field`,
+    "any.required": `"Name" is required`
+  }),
+
+  accountNumber: Joi.string().pattern(/^9\d{9}$/).optional().messages({
+    "string.pattern.base": `"Number" must start with 9 and be exactly 10 digits`,
+    "string.base": `"Number" must be a string`,
+    "string.empty": `"Number" cannot be an empty field`,
+    "any.required": `"Number" is required`
+  })
+})
+
+const accountNameEnum = ["NOT_STARTED", "IN_PROGRESS", "DECLINED", "APPROVED"];
+module.exports.sendApplicationDTO = Joi.object({
+  status: Joi.string().valid(...accountNameEnum).required().messages({
+    "string.base": `"Status" must be a string`,
+    "string.empty": `"Status" cannot be an empty field`,
+    "any.only": `"Status" must be one of the following values: ${accountNameEnum.join(', ')}`,
+  }),
+})
+  ;
+
+module.exports.updateBuyerLocationDTO = Joi.object({
+  coordinates: Joi.object({
+    lat: Joi.number().required().messages({
+      "number.base": `"Latitude" must be a number`,
+      "any.required": `"Latitude" is required`,
+    }),
+    lng: Joi.number().required().messages({
+      "number.base": `"Longitude" must be a number`,
+      "any.required": `"Longitude" is required`,
+    }),
+  }).required().messages({
+    "object.base": `"Coordinates" must be an object`,
+    "any.required": `"Coordinates" field is required`,
+  }),
+});
+
+module.exports.addPartialShopDTO = Joi.object({
+  coordinates: Joi.object({
+    lat: Joi.number().required().messages({
+      "number.base": `"Latitude" must be a number`,
+      "any.required": `"Latitude" is required`,
+    }),
+    lng: Joi.number().required().messages({
+      "number.base": `"Longitude" must be a number`,
+      "any.required": `"Longitude" is required`,
+    }),
+  }).required().messages({
+    "object.base": `"Coordinates" must be an object`,
+    "any.required": `"Coordinates" field is required`,
+  }),
+  businessName: Joi.string().optional().messages({
+    "string.base": `"Business Name" must be a string`,
+    "string.empty": `"Business Name" cannot be an empty field`,
+    "any.required": `"Business Name" is required`
+  }),
 });

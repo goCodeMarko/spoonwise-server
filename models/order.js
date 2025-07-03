@@ -258,8 +258,8 @@ module.exports.getOrders = async (req, res) => {
 
     if (req.auth.role === "buyer") filter = { buyer: new mongoose.Types.ObjectId(req.auth._id) };
     else if (req.auth.role === "seller") {
-      filter = { shops: { $in: [new mongoose.Types.ObjectId(req.auth.shop)] } };
-      filterSeller = { "cart.shopId": new mongoose.Types.ObjectId(req.auth.shop) };
+      filter = { shops: { $in: [new mongoose.Types.ObjectId(req.auth.shop?._id)] } };
+      filterSeller = { "cart.shopId": new mongoose.Types.ObjectId(req.auth.shop?._id) };
     }
 
 

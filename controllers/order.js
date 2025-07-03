@@ -263,8 +263,8 @@ generateQuotation = async (req, res) => {
     .withLanguage("en_PH")
     .withServiceType("MOTORCYCLE")
     .withStops([
-      { coordinates: { lat: "" + shop.data[0].coordinates.lat, lng: "" + shop.data[0].coordinates.lon }, address: shop.data[0].address1 + " " + shop.data[0].address2 },
-      { coordinates: { lat: "" + req.auth.coordinates.lat, lng: "" + req.auth.coordinates.lon }, address: req.auth.address1 + " " + req.auth.address2 }
+      { coordinates: { lat: "" + shop.data[0].coordinates.lat, lng: "" + shop.data[0].coordinates.lng }, address: shop.data[0].address1 + " " + shop.data[0].address2 },
+      { coordinates: { lat: "" + req.auth.coordinates.lat, lng: "" + req.auth.coordinates.lng }, address: req.auth.address1 + " " + req.auth.address2 }
     ]).build();
 
   const quotation = await lalamoveClient.Quotation.create("PH", quotationPayload);

@@ -20,7 +20,7 @@ cloudinary = require("./../services/cloudinary");
 module.exports.getProducts = async (req, res) => {
   try {
     let response = { success: true, code: 200 };
-
+    console.log('333432')
     const result = await model.getProducts(req, res);
     response.data = result;
 
@@ -93,7 +93,7 @@ module.exports.createProduct = async (req, res) => {
     body.expiryDate = dateUTC;
 
     req.fnParams = {
-      shopId: req.auth.shop,
+      shopId: req.auth.shop?._id,
       name: body.name,
       qty: body.qty,
       expiryDate: body.expiryDate,

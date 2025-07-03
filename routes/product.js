@@ -5,8 +5,8 @@ const { execute } = require("../services/padayon"),
   base = path.basename(__filename, ".js"),
   express = require("express"),
   router = express.Router(),
-  multer = require('./../services/multer')
-controller = require(`../controllers/${base}`);
+  multer = require('./../services/multer'),
+  controller = require(`../controllers/${base}`);
 
 // router.post(
 //   `/api/${base}/createTransaction`,

@@ -1,8 +1,11 @@
+
+
 const padayon = require("../services/padayon"),
   path = require("path"),
   base = path.basename(__filename, ".js"),
   model = require(`./../models/${base}`),
-  bookController = require(`./../controllers/book`),
+  shopModel = require(`./../models/shop`)
+bookController = require(`./../controllers/book`),
   bcrypt = require("bcrypt"),
   jwt = require("jsonwebtoken"),
   qrcode = require("./../services/qrcode"),
@@ -12,10 +15,12 @@ const padayon = require("../services/padayon"),
   papaparse = require("./../services/papaparse"),
   stream = require("stream"),
   _ = require("lodash"),
-  { userAccessDTO, userDTO } = require("../services/dto"),
+  { userAccessDTO, userDTO, addUserDTO, addPartialShopDTO, updateBuyerLocationDTO } = require("../services/dto"),
   email = require("./../services/email"),
   id_card = require("./../services/id_card"),
   Product = require('./product'),
+  moment = require("moment-timezone"),
+  { differenceInMinutes, differenceInSeconds } = require("date-fns"),
   cloudinary = require("./../services/cloudinary");
 
 module.exports.getUser = async (req, res) => {
@@ -272,7 +277,7 @@ module.exports.generateQR = async (req, res) => {
     });
 
     const generatedQR = await qrcode.generate(user);
-  
+
     if (
       _.isEmpty(generatedQR?.secure_url) ||
       _.isEmpty(generatedQR?.public_id) ||
@@ -496,23 +501,48 @@ module.exports.downloadExcel = async (req, res) => {
 module.exports.addUser = async (req, res) => {
   try {
     let response = { success: true, code: 201 };
-    const hashedPassword = await bcrypt.hash(req.body.password, 11);
-    const body = {
+    let shop = {}
+    let user = {}
+
+    if (req.body.role === 'seller') {
+
+      const body = {
+        coordinates: req.body.coordinates,
+        businessName: req.body.businessname,
+      };
+      req.fnParams = {
+        ...body
+      };
+      console.log('===body', body)
+
+      await addPartialShopDTO.validateAsync(body);
+      shop = await shopModel.addShop(req, res);
+
+    }
+
+    console.log('------1', shop)
+    const hashedPassword = await bcrypt.hash(req.body.passwordGroup.password, 11);
+    console.log('------2')
+    const userBody = {
       email: req.body.email,
       password: hashedPassword,
-    
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      role: req.body.role,
+      shop: shop._id
     };
+    console.log('------3')
+    console.log('=====userBody', userBody)
+    await addUserDTO.validateAsync(userBody);
 
-    await userDTO.validateAsync(body);
+    req.fnParams = userBody;
+    req.shop = shop
+    user = await model.addUser(req, res);
 
-    req.fnParams = {
-      email: req.body.email,
-      password: hashedPassword,
-    };
 
-    await model.addUser(req, res, (result) => {
-      response.data = result ?? {};
-    });
+    response.data = { shop, user }
+
+    console.log('==========response.data', response.data)
     return response;
   } catch (error) {
     padayon.ErrorHandler("Controller::User::addUser", error, req, res);
@@ -527,7 +557,7 @@ module.exports.getCart = async (req, res) => {
 
     const result = await model.getCart(req, res);
     response.data = result;
-    
+
     return response;
   } catch (error) {
     padayon.ErrorHandler(
@@ -544,22 +574,22 @@ module.exports.addToCart = async (req, res) => {
     let response = { success: true, code: 200 };
 
     req.params.id = req.body.lineItem.productId;
-    const productController = await Product.getProduct(req,res);
+    const productController = await Product.getProduct(req, res);
 
-    if(!productController.data){
+    if (!productController.data) {
       throw new padayon.BadRequestException(`Product not found`);
-    }else {
-      if(productController.data.qty < req.body.lineItem.orderQty || req.body.lineItem.orderQty <= 0){
-        throw new padayon.BadRequestException(`Invalid order quantity. Ensure quantity is between 1 and ${productController.data.qty}.`, { currentProductStock:  productController.data.qty, _id: productController.data._id });
+    } else {
+      if (productController.data.qty < req.body.lineItem.orderQty || req.body.lineItem.orderQty <= 0) {
+        throw new padayon.BadRequestException(`Invalid order quantity. Ensure quantity is between 1 and ${productController.data.qty}.`, { currentProductStock: productController.data.qty, _id: productController.data._id });
       }
-    } 
+    }
 
     const result = await model.addToCart(req, res);
     response.data = result;
-    
+
     return response;
   } catch (error) {
-    console.error("Error Data:", error.data);   
+    console.error("Error Data:", error.data);
     padayon.ErrorHandler(
       "Controller::User::addToCart",
       error,
@@ -569,12 +599,103 @@ module.exports.addToCart = async (req, res) => {
   }
 };
 
+module.exports.generateOTP = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+
+    const otp = padayon.generate4DigitCodeWithZeros();
+    const now = new Date(); // current UTC
+    const expiresAt = new Date(now.getTime() + 1 * 60000); // add 1 minute
+
+    req.fnParams = {
+      otp,
+      ...req.query,
+      expiresAt
+    }
+
+    const otpDetails = await model.getUserOTPDetails(req, res);
+
+    const currentOTP = {
+      isConsumed: otpDetails.user.otp.isConsumed,
+      expiresAt: differenceInSeconds(otpDetails.user.otp.expiresAt, now)
+    }
+
+    if (currentOTP.expiresAt > 0 && !currentOTP.isConsumed) {
+      throw new padayon.BadRequestException(
+        "A valid OTP already exists. Please use the existing OTP or wait for it to expire before requesting a new one.",
+        { errorType: 'OTP_NOT_EXPIRED', expiresAt: currentOTP.expiresAt }
+      );
+    }
+
+    const result = await model.generateOTP(req, res);
+    const localTime = moment.utc(result.expiresAt).tz(req.timezone);
+    console.log('=========otpDetails', otpDetails.user)
+    // emailer
+    //otpDetails.user.email
+    email.notify('dulacamen27@gmail.com', "otp_template", {
+      header: `Your One-Time Password`,
+      banner: "spoonwise-logo-full",
+      name: otpDetails.user.role === 'seller' ? otpDetails.shop.shop.businessName : otpDetails.user.firstname,
+      otp: otp,
+    })
+
+    const seconds = differenceInSeconds(expiresAt, now);
+
+    response.data = { expiresAt: seconds };
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Controller::User::generateOTP", error, req, res);
+  }
+};
+
+module.exports.checkOTP = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+    const now = new Date(); // current UTC
+    req.fnParams = {
+      ...req.query
+    }
+
+    const otpDetails = await model.getUserOTPDetails(req, res);
+    const currentOTP = {
+      isConsumed: otpDetails.user.otp.isConsumed,
+      code: otpDetails.user.otp.code,
+      expiresAt: differenceInSeconds(otpDetails.user.otp.expiresAt, now)
+    }
+
+    if (currentOTP.expiresAt <= 0) {
+      throw new padayon.BadRequestException(
+        "OTP has expired.",
+        { errorType: 'OTP_EXPIRED' }
+      );
+    } else if (currentOTP.isConsumed) {
+      throw new padayon.BadRequestException(
+        "OTP already used.",
+        { errorType: 'OTP_CONSUMED' }
+      );
+    } else if (currentOTP.code !== req.fnParams.otp) {
+      throw new padayon.BadRequestException(
+        "Incorrect OTP.",
+        { errorType: 'OTP_INCORRECT' }
+      );
+    } else if (currentOTP.code === req.fnParams.otp) {
+      const otpDetails = await model.consumedOTP(req, res);
+      response.data = { message: 'OTP_SUCCESS' };
+    }
+
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Controller::User::checkOTP", error, req, res);
+  }
+};
+
+
 
 module.exports.removeCheckedCartLineItems = async (req, res) => {
   try {
     let response = { success: true, code: 200 };
     console.log(1)
-    const result = await model.removeCheckedCartLineItems(req,res);
+    const result = await model.removeCheckedCartLineItems(req, res);
     console.log(2)
     response.data = result;
     return response;
@@ -582,3 +703,41 @@ module.exports.removeCheckedCartLineItems = async (req, res) => {
     padayon.ErrorHandler("Controller::User::removeCheckedCartLineItems", error, req, res);
   }
 };
+
+module.exports.getUserAuth = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+    req.fnParams = {
+      userId: req.auth?._id,
+    };
+    console.log(' req.fnParams', req.fnParams)
+    const [data] = await model.getUserAuth(req, res);
+    response.data = data;
+    console.log('---response.data', response)
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Controller::User::getUserAuth", error, req, res);
+  }
+};
+
+module.exports.updateBuyerLocation = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+    const body = {
+      coordinates: req?.body?.coordinates,
+    };
+
+    await updateBuyerLocationDTO.validateAsync(body);
+
+    req.fnParams = {
+      userId: req.auth._id,
+      coordinates: body.coordinates
+    };
+
+    const data = await model.updateBuyerLocation(req, res);
+    response.data = data;
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Controller::User::updateBuyerLocation", error, req, res);
+  }
+}; //---------done

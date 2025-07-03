@@ -79,7 +79,7 @@ module.exports.totalCountSentMessages = async (req, res) => {
 
         let id = new mongoose.Types.ObjectId(req.auth._id);
 
-        if (req.auth.role === "seller") id = new mongoose.Types.ObjectId(req.auth.shop);
+        if (req.auth.role === "seller") id = new mongoose.Types.ObjectId(req.auth.shop?._id);
 
         const result = await Message.countDocuments({ status: { $in: ["DELIVERED", "SENT"] }, receiverId: id });
 
@@ -130,7 +130,7 @@ module.exports.updateChatroomsMsgStatusToDelivered = async (req, res) => {
         const messagesToUpdate = await Message.find(
             {
                 status: 'SENT',
-                receiverId: req.auth.role === 'seller' ? req.auth.shop : req.auth._id
+                receiverId: req.auth.role === 'seller' ? req.auth.shop?._id : req.auth._id
             },
             { chatroomId: 1, senderId: 1, receiverId: 1 }
         );
@@ -138,7 +138,7 @@ module.exports.updateChatroomsMsgStatusToDelivered = async (req, res) => {
         const result = await Message.updateMany(
             {
                 status: 'SENT',
-                receiverId: req.auth.role === 'seller' ? req.auth.shop : req.auth._id
+                receiverId: req.auth.role === 'seller' ? req.auth.shop?._id : req.auth._id
             },
             {
                 $set: { status: 'DELIVERED' }
@@ -188,7 +188,7 @@ module.exports.updateChatroomsMsgStatusToSeen = async (req, res) => {
             {
                 chatroomId: new mongoose.Types.ObjectId(req.fnParams.chatroomId),
                 status: { $in: ['SENT', 'DELIVERED'] },
-                receiverId: req.auth.role === 'seller' ? req.auth.shop : req.auth._id
+                receiverId: req.auth.role === 'seller' ? req.auth.shop?._id : req.auth._id
             },
             { chatroomId: 1, senderId: 1, receiverId: 1 }
         );
@@ -197,7 +197,7 @@ module.exports.updateChatroomsMsgStatusToSeen = async (req, res) => {
             {
                 chatroomId: new mongoose.Types.ObjectId(req.fnParams.chatroomId),
                 status: { $in: ['SENT', 'DELIVERED'] },
-                receiverId: req.auth.role === 'seller' ? req.auth.shop : req.auth._id
+                receiverId: req.auth.role === 'seller' ? req.auth.shop?._id : req.auth._id
             },
             {
                 $set: { status: 'SEEN' }

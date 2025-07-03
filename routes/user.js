@@ -134,7 +134,7 @@ router.get(
 router.post(
   `/api/${base}/addUser`,
   execute(controller.addUser, {
-    secured: true,
+    secured: false,
   })
 ); //---------done
 
@@ -148,6 +148,34 @@ router.get(
 router.post(
   `/api/${base}/addToCart`,
   execute(controller.addToCart, {
+    secured: true,
+  })
+); //---------done
+
+router.put(
+  `/api/${base}/generateOTP`,
+  execute(controller.generateOTP, {
+    secured: false,
+  })
+); //---------done
+
+router.get(
+  `/api/${base}/checkOTP`,
+  execute(controller.checkOTP, {
+    secured: false,
+  })
+); //---------done
+
+router.get(
+  `/api/${base}/getUserAuth`,
+  execute(controller.getUserAuth, {
+    secured: true,
+  })
+); //---------done
+
+router.put(
+  `/api/${base}/updateBuyerLocation`,
+  execute(controller.updateBuyerLocation, {
     secured: true,
   })
 ); //---------done

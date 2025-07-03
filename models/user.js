@@ -4,6 +4,7 @@ const path = require("path"),
   base = path.basename(__filename).split(".").shift(),
   mongoose = require("mongoose"),
   padayon = require("../services/padayon"),
+  Shop = require('./shop'),
   bcrypt = require("bcrypt"),
   _ = require('lodash');
 
@@ -32,7 +33,7 @@ const StoreSchema = new mongoose.Schema(
     businessName: { type: String },
     coordinates: {
       lat: { type: Number, default: "" },
-      lon: { type: Number, default: "" }
+      lng: { type: Number, default: "" }
     },
     address1: { type: String, default: "" },
     address2: { type: String, default: "" },
@@ -82,6 +83,11 @@ User = mongoose.model(
     phoneNumber: { type: String },
     address1: { type: String },
     address2: { type: String },
+    otp: {
+      code: { type: String, required: false },
+      isConsumed: { type: Boolean, default: false },
+      expiresAt: { type: Date, required: false }
+    },
     shop: { type: mongoose.Schema.Types.ObjectId, ref: 'Shop' },
     company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
     branch: { type: mongoose.Schema.Types.ObjectId },
@@ -91,7 +97,7 @@ User = mongoose.model(
     isblock: { type: Boolean, default: false },
     coordinates: {
       lat: { type: Number },
-      lon: { type: Number }
+      lng: { type: Number }
     },
     cart: [
       {
@@ -101,6 +107,8 @@ User = mongoose.model(
     ]
   })
 );
+
+
 
 module.exports.getUser = async (req, res, callback) => {
   try {
@@ -197,6 +205,20 @@ module.exports.authenticate = async (req, res, callback) => {
         $match: {
           email: email
         },
+      },
+      {
+        $lookup: {
+          from: 'shops',
+          localField: 'shop',
+          foreignField: '_id',
+          as: 'shop'
+        }
+      },
+      {
+        $unwind: {
+          path: '$shop',
+          preserveNullAndEmptyArrays: true
+        }
       },
       {
         $project: {
@@ -366,7 +388,7 @@ module.exports.verifyAccessControl = async (req, res, callback) => {
   }
 }; //---------done
 
-module.exports.addUser = async (req, res, callback) => {
+module.exports.addUser = async (req, res) => {
   try {
     let response = {};
     const body = req.fnParams;
@@ -375,7 +397,7 @@ module.exports.addUser = async (req, res, callback) => {
     const result = await newUser.save();
 
     response = result;
-    callback(response);
+    return response;
   } catch (error) {
     padayon.ErrorHandler("Model::User::addUser", error, req, res);
   }
@@ -575,3 +597,206 @@ module.exports.addToCart = async (req, res) => {
     padayon.ErrorHandler("Model::User::addToCart", error, req, res);
   }
 };
+
+module.exports.generateOTP = async (req, res) => {
+  try {
+    let response = {};
+    const {
+      userId,
+      otp,
+      expiresAt
+    } = req.fnParams;
+
+    const result = await User.findOneAndUpdate(
+      { _id: new mongoose.Types.ObjectId(userId) },
+      {
+        $set: {
+          otp: {
+            code: otp,
+            expiresAt: expiresAt,
+            isConsumed: false
+          },
+        },
+      },
+      { new: true }
+    );
+
+    response = {
+      expiresAt: result.otp.expiresAt
+    };
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Model::User::generateOTP", error, req, res);
+  }
+};
+
+
+
+module.exports.getUserOTPDetails = async (req, res) => {
+  try {
+    let response = {};
+    const {
+      userId
+    } = req.fnParams;
+
+    const userx = await User.findById(userId, {
+      "otp.expiresAt": 1,
+      "otp.isConsumed": 1,
+      "otp.code": 1,
+      "firstname": 1,
+      "role": 1,
+      "shop": 1,
+      "email": 1,
+      _id: 0
+    });
+    let shop = {}
+    console.log('===userx', userx.role)
+    if (userx.role === 'seller') {
+      console.log('1')
+      shop = await User.findById(userId).populate({
+        path: 'shop',
+        select: 'businessName'
+      });
+      console.log('shop', shop)
+    }
+
+    response = { user: userx, shop };
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Model::User::getUserOTPDetails", error, req, res);
+  }
+};
+
+module.exports.consumedOTP = async (req, res) => {
+  try {
+    let response = {};
+    const {
+      userId,
+    } = req.fnParams;
+    console.log('==-==', userId)
+    const result = await User.findOneAndUpdate(
+      { _id: new mongoose.Types.ObjectId(userId) },
+      { $set: { 'otp.isConsumed': true } },
+    );
+
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Model::User::consumedOTP", error, req, res);
+  }
+};
+
+module.exports.getUsers = async (req, res, callback) => {
+  try {
+    let response = {};
+    const result = await User.aggregate([
+      {
+        $match: {
+          role: "admin",
+        },
+      },
+      {
+        $project: {
+          email: 1,
+          role: 1,
+          fullname: {
+            $concat: ["$firstname", " ", "$lastname"],
+          },
+          firstname: 1,
+          lastname: 1,
+          isallowedtodelete: 1,
+          isallowedtocreate: 1,
+          isallowedtoupdate: 1,
+          isblock: 1,
+          id_card: 1,
+          barcode: 1,
+          qrcode: 1,
+          profile_picture: 1,
+          company: 1,
+          branch: 1,
+        },
+      },
+    ]);
+
+    response = result;
+    callback(response);
+  } catch (error) {
+    padayon.ErrorHandler("Model::User::getUsers", error, req, res);
+  }
+};
+
+module.exports.getUserAuth = async (req, res) => {
+  try {
+    const { userId } = req.fnParams;
+    console.log('===========userId', userId)
+    const account = await User.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(userId)
+        },
+      },
+      {
+        $lookup: {
+          from: 'shops',
+          localField: 'shop',
+          foreignField: '_id',
+          as: 'shop'
+        }
+      },
+      {
+        $unwind: {
+          path: '$shop',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $project: {
+          email: 1,
+          role: 1,
+          shop: 1,
+          fullname: {
+            $concat: ["$firstname", " ", "$lastname"],
+          },
+          password: 1,
+          profile_picture: 1,
+          phoneNumber: 1,
+          address1: 1,
+          address2: 1,
+          isblock: 1,
+          company: 1,
+          branch: 1,
+          coordinates: 1,
+          cart: 1
+        },
+      },
+    ]);
+    console.log('account', account)
+    return account;
+  } catch (error) {
+    padayon.ErrorHandler("Model::User::getUserAuth", error, req, res);
+  }
+};
+
+
+module.exports.updateBuyerLocation = async (req, res) => {
+  try {
+
+    const {
+      userId,
+      coordinates,
+
+    } = req.fnParams;
+    const result = await User.updateOne(
+      { _id: new mongoose.Types.ObjectId(userId) },
+      {
+        $set: {
+          coordinates
+        },
+      }
+    );
+
+    response = result;
+    return result;
+  } catch (error) {
+    padayon.ErrorHandler("Model::User::updateBuyerLocation", error, req, res);
+  }
+}; 

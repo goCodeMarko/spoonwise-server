@@ -34,8 +34,8 @@ module.exports.getPastChatrooms = async (req, res) => {
         if (req.auth.role === "buyer")
             filter["users.buyerId"] = new mongoose.Types.ObjectId(req.auth._id);
         else if (req.auth.role === "seller") {
-            filter["users.shopId"] = new mongoose.Types.ObjectId(req.auth.shop);
-            id = new mongoose.Types.ObjectId(req.auth.shop);
+            filter["users.shopId"] = new mongoose.Types.ObjectId(req.auth.shop?._id);
+            id = new mongoose.Types.ObjectId(req.auth.shop?._id);
         }
         console.log('--filter', filter)
         const result = await Chatroom.aggregate([
@@ -260,8 +260,8 @@ module.exports.getChatrooms = async (req, res) => {
         if (req.auth.role === "buyer")
             filter["users.buyerId"] = new mongoose.Types.ObjectId(req.auth._id);
         else if (req.auth.role === "seller") {
-            filter["users.shopId"] = new mongoose.Types.ObjectId(req.auth.shop);
-            id = new mongoose.Types.ObjectId(req.auth.shop);
+            filter["users.shopId"] = new mongoose.Types.ObjectId(req.auth.shop?._id);
+            id = new mongoose.Types.ObjectId(req.auth.shop?._id);
         }
 
         const result = await Chatroom.aggregate([

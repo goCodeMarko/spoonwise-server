@@ -71,7 +71,7 @@ module.exports.sendMessage = async (req, res) => {
         req.fnParams = {
             elementId: req.body.elementId,
             chatroomId: req.params.chatroomId,
-            senderId: req.auth.role === 'seller' ? req.auth.shop : req.auth._id,
+            senderId: req.auth.role === 'seller' ? req.auth.shop?._id : req.auth._id,
             receiverId: req.auth.role === 'seller' ? chatroomObj.users.buyer._id : chatroomObj.users.shop._id,
             content: req.body.content,
             status: "SENT"

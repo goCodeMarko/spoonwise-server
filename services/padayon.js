@@ -75,6 +75,10 @@ module.exports.ErrorHandler = (area, error, req, res) => {
   res.status(statusCode).send(message);
 }; //---------done
 
+module.exports.generate4DigitCodeWithZeros = () => {
+  return Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+}
+
 module.exports.security = async (req, res, options, callback) => {
   let response = { success: true, message: "", account: {} };
   try {
