@@ -289,8 +289,42 @@ module.exports.sendApplicationDTO = Joi.object({
     "string.empty": `"Status" cannot be an empty field`,
     "any.only": `"Status" must be one of the following values: ${accountNameEnum.join(', ')}`,
   }),
-})
-  ;
+});
+
+module.exports.declineApplicationDTO = Joi.object({
+  shopId: Joi.string().pattern(objectIdPattern).required().messages({
+    "string.pattern.base": `"Shop" must be a valid MongoDB ObjectId`,
+    "string.base": `"Shop" should be a type of "string"`,
+    "string.empty": `"Shop" cannot be an empty field`,
+  }),
+  status: Joi.string().valid(...accountNameEnum).required().messages({
+    "string.base": `"Status" must be a string`,
+    "string.empty": `"Status" cannot be an empty field`,
+    "any.only": `"Status" must be one of the following values: ${accountNameEnum.join(', ')}`,
+  }),
+  tab1: Joi.string().optional().messages({
+    "string.base": `"Error Message" must be a string`,
+  }),
+  tab2: Joi.string().optional().messages({
+    "string.base": `"Error Message" must be a string`,
+  }),
+  tab3: Joi.string().optional().messages({
+    "string.base": `"Error Message" must be a string`
+  }),
+});
+
+module.exports.approveApplicationDTO = Joi.object({
+  shopId: Joi.string().pattern(objectIdPattern).required().messages({
+    "string.pattern.base": `"Shop" must be a valid MongoDB ObjectId`,
+    "string.base": `"Shop" should be a type of "string"`,
+    "string.empty": `"Shop" cannot be an empty field`,
+  }),
+  status: Joi.string().valid(...accountNameEnum).required().messages({
+    "string.base": `"Status" must be a string`,
+    "string.empty": `"Status" cannot be an empty field`,
+    "any.only": `"Status" must be one of the following values: ${accountNameEnum.join(', ')}`,
+  })
+});
 
 module.exports.updateBuyerLocationDTO = Joi.object({
   coordinates: Joi.object({
@@ -328,3 +362,31 @@ module.exports.addPartialShopDTO = Joi.object({
     "any.required": `"Business Name" is required`
   }),
 });
+
+
+const blogStatuses = ["DRAFT", "PUBLISHED", "ARCHIVED"];
+const blogAudiences = ["PUBLIC", "SELLER", "BUYER"];
+module.exports.blogDTO = Joi.object({
+
+  title: Joi.string().optional().messages({
+    "string.base": `"Business Name" must be a string`,
+    "string.empty": `"Business Name" cannot be an empty field`,
+    "any.required": `"Business Name" is required`
+  }),
+  content: Joi.string().optional().messages({
+    "string.base": `"Business Name" must be a string`,
+    "string.empty": `"Business Name" cannot be an empty field`,
+    "any.required": `"Business Name" is required`
+  }),
+  status: Joi.string().valid(...blogStatuses).required().messages({
+    "string.base": `"Status" must be a string`,
+    "string.empty": `"Status" cannot be an empty field`,
+    "any.only": `"Status" must be one of the following values: ${blogStatuses.join(', ')}`,
+  }),
+  audience: Joi.string().valid(...blogAudiences).required().messages({
+    "string.base": `"Audience" must be a string`,
+    "string.empty": `"Audience" cannot be an empty field`,
+    "any.only": `"Audience" must be one of the following values: ${blogAudiences.join(', ')}`,
+  }),
+});
+

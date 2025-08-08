@@ -184,6 +184,222 @@ module.exports.getShops = async (req, res) => {
   }
 };
 
+module.exports.getNearestShops = async (req, res) => {
+  try {
+    const buyer = {
+      lat: req.auth.coordinates.lat,
+      lng: req.auth.coordinates.lng
+    }
+
+    const MQLBuilder = [
+
+      {
+        $project: {
+          _id: 1,
+          businessName: 1,
+          barangay: 1,
+          municipality: 1,
+          province: 1,
+          address: 1,
+          coordinates: {
+            lat: '$coordinates.lat',
+            lng: '$coordinates.lng'
+          },
+          distance: {
+            $round: [
+              {
+                $multiply: [
+                  6371,
+                  {
+                    $acos: {
+                      $add: [
+                        {
+                          $multiply: [
+                            {
+                              $sin: {
+                                $multiply: [
+                                  {
+                                    $divide: [
+                                      { $toDouble: buyer.lat },
+                                      180
+                                    ]
+                                  },
+                                  3.141592653589793
+                                ]
+                              }
+                            },
+                            {
+                              $sin: {
+                                $multiply: [
+                                  {
+                                    $divide: [
+                                      { $toDouble: "$coordinates.lat" },
+                                      180
+                                    ]
+                                  },
+                                  3.141592653589793
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          $multiply: [
+                            {
+                              $cos: {
+                                $multiply: [
+                                  {
+                                    $divide: [
+                                      { $toDouble: buyer.lat },
+                                      180
+                                    ]
+                                  },
+                                  3.141592653589793
+                                ]
+                              }
+                            },
+                            {
+                              $cos: {
+                                $multiply: [
+                                  {
+                                    $divide: [
+                                      { $toDouble: "$coordinates.lat" },
+                                      180
+                                    ]
+                                  },
+                                  3.141592653589793
+                                ]
+                              }
+                            },
+                            {
+                              $cos: {
+                                $multiply: [
+                                  {
+                                    $subtract: [
+                                      {
+                                        $multiply: [
+                                          {
+                                            $divide:
+                                              [
+                                                { $toDouble: buyer.lng },
+                                                180
+                                              ]
+                                          },
+                                          3.141592653589793
+                                        ]
+                                      },
+                                      {
+                                        $multiply: [
+                                          {
+                                            $divide:
+                                              [
+                                                { $toDouble: "$coordinates.lng" },
+                                                180
+                                              ]
+                                          },
+                                          3.141592653589793
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              1
+            ]
+          }
+        }
+      }, {
+        $sort: {
+          distance: 1
+        }
+      },
+      {
+
+        $lookup: {
+
+          from: "orders",
+          let: { shopId: "$_id" },
+          pipeline: [
+            { $unwind: "$cart" },
+
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$cart.shopId", "$$shopId"]
+                },
+                "cart.reviews.rate": { $gt: 0 }
+              }
+            },
+            {
+              $project: {
+                reviewRate: "$cart.reviews.rate"
+              }
+            }
+          ],
+          as: "productReviews"
+        }
+      }, {
+        '$addFields': {
+          'averageRating': {
+            '$avg': '$productReviews.reviewRate'
+          },
+          'totalReviews': {
+            '$size': '$productReviews'
+          }
+        }
+      },
+      {
+        $lookup: {
+
+          from: "products",
+          let: { shopId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$shopId", "$$shopId"] },
+                    { $eq: ["$isPublish", true] }
+                  ]
+                }
+              }
+            },
+            { $count: "count" }
+          ],
+          as: "productStats"
+
+        }
+      },
+      {
+        $addFields: {
+          productCount: {
+            $cond: [
+              { $gt: [{ $size: "$productStats" }, 0] },
+              {
+                $arrayElemAt: ["$productStats.count", 0]
+              },
+              0
+            ]
+          }
+        }
+      }
+    ]
+    const shops = await Shop.aggregate(MQLBuilder);
+    console.log('shops', shops);
+    return shops;
+  } catch (error) {
+    padayon.ErrorHandler("Model::Category::getNearestShops", error, req, res);
+  }
+};
+
 
 module.exports.getShopList = async (req, res) => {
   try {
@@ -500,6 +716,66 @@ module.exports.sendApplication = async (req, res) => {
   } catch (error) {
     padayon.ErrorHandler(
       "Model::Shop::sendApplication",
+      error,
+      req,
+      res
+    );
+  }
+}
+
+module.exports.declineApplication = async (req, res) => {
+  try {
+    const body = req.fnParams;
+    console.log('body', body)
+    const result = await Shop.updateOne(
+      {
+        _id: new mongoose.Types.ObjectId(body.shopId),
+      },
+      {
+        $set: {
+          "verification_process.status": body.status,
+          'verification_process.errors.tab1': body.tab1,
+          'verification_process.errors.tab2': body.tab2,
+          'verification_process.errors.tab3': body.tab3,
+          'verification_process.updatedAt': new Date()
+        },
+      },
+
+    );
+    console.log('result', result)
+    response = result;
+  } catch (error) {
+    padayon.ErrorHandler(
+      "Model::Shop::declineApplication",
+      error,
+      req,
+      res
+    );
+  }
+}
+
+module.exports.approveApplication = async (req, res) => {
+  try {
+    const body = req.fnParams;
+    console.log('body', body)
+    const result = await Shop.updateOne(
+      {
+        _id: new mongoose.Types.ObjectId(body.shopId),
+      },
+      {
+        $set: {
+          "verification_process.status": body.status,
+
+          'verification_process.updatedAt': new Date()
+        },
+      },
+
+    );
+    console.log('result', result)
+    response = result;
+  } catch (error) {
+    padayon.ErrorHandler(
+      "Model::Shop::approveApplication",
       error,
       req,
       res

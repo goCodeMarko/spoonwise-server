@@ -71,9 +71,13 @@ module.exports.ErrorHandler = (area, error, req, res) => {
       date,
     },
   };
-  this.write(message);
-  res.status(statusCode).send(message);
-}; //---------done
+
+  // this.write(message);
+  if (!res.headersSent) {
+    console.error(message);
+    res.status(statusCode).send(message);
+  }
+};
 
 module.exports.generate4DigitCodeWithZeros = () => {
   return Math.floor(Math.random() * 10000).toString().padStart(4, '0');

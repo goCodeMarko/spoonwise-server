@@ -32,6 +32,8 @@ module.exports.getProducts = async (req, res) => {
     const radius = req.query.radius ? Number(req.query.radius) : 3;
     const search = req.query.search;
     const specialOffer = req.query.specialOffer;
+    const shop = req.query.shop;
+    console.log('---shop', shop)
     const categories = typeof req.query.categories == 'string' ? [req.query.categories] : req.query.categories;
     let sort = 'createdAt';
     let sortType = -1;
@@ -61,6 +63,11 @@ module.exports.getProducts = async (req, res) => {
       }
     });
     if (req.auth.role == "seller") MQLBuilder.push({ $match: { shopId: new mongoose.Types.ObjectId(req.auth.shop?._id) } });
+
+
+    if (shop && req.auth.role == "buyer") MQLBuilder.push({ $match: { shopId: new mongoose.Types.ObjectId(shop) } });
+
+
 
     MQLBuilder.push(
       {
@@ -299,16 +306,16 @@ module.exports.getProducts = async (req, res) => {
 
     if (_.size(categories)) MQLBuilder.push({ $match: { category: { $in: categories } } });
 
-    if (req.query.storeRating) MQLBuilder.push({ $match: { rating: { $gte: Number(req.query.storeRating) } } });
-    console.log('=============specialOffer', specialOffer)
+    if (req.query.storeRating && !shop) MQLBuilder.push({ $match: { rating: { $gte: Number(req.query.storeRating) } } });
+
     if (specialOffer) MQLBuilder.push({ $match: { specialOffers: { $in: [specialOffer] } } });
-    if (radius) MQLBuilder.push({ $match: { distance: { $lte: radius } } });
-    console.log('--------')
+
+    if (radius && (req.auth.role === "buyer" && !shop)) MQLBuilder.push({ $match: { distance: { $lte: radius } } });
+
     sortCriteria = {};
     sortCriteria[sort] = sortType;
     MQLBuilder.push({ $sort: sortCriteria });
 
-    console.log('5345345', req.auth)
     MQLBuilder.push(
       {
         $facet: {

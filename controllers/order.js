@@ -332,7 +332,7 @@ module.exports.lalamoveCreateOrder = async (req, res) => {
     const shop = await shopController.getShop(req, res);
 
     if (!_.size(shop.data)) throw new padayon.BadRequestException("Shop Not Found");
-    if (!_.size(order)) throw new padayon.BadRequestException("Order Not Found");
+    if (!_.size9 - (order)) throw new padayon.BadRequestException("Order Not Found");
 
     let remarks = 'Please pick-up the product(s): ';
     order[0].lineItems.forEach(lineitem => {

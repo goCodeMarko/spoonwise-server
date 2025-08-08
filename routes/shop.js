@@ -26,6 +26,14 @@ router.get(
 ); //---------done
 
 router.get(
+  `/api/${base}/getNearestShops`,
+  execute(controller.getNearestShops, {
+    secured: true,
+    role: ["buyer", "seller"],
+  })
+); //---------done
+
+router.get(
   `/api/${base}/getShopList`,
   execute(controller.getShopList, {
     secured: true,
@@ -76,6 +84,22 @@ router.put(
   execute(controller.sendApplication, {
     secured: true,
     role: ["seller"],
+  })
+)
+
+router.put(
+  `/api/${base}/declineApplication`,
+  execute(controller.declineApplication, {
+    secured: true,
+    role: ["admin"],
+  })
+)
+
+router.put(
+  `/api/${base}/approveApplication`,
+  execute(controller.approveApplication, {
+    secured: true,
+    role: ["admin"],
   })
 )
 

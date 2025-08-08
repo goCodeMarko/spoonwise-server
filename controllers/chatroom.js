@@ -76,3 +76,29 @@ module.exports.getChatroom = async (req, res) => {
     }
 };
 
+module.exports.updateLanguage = async (req, res) => {
+    try {
+        let response = { success: true, code: 200 };
+
+        req.fnParams = {
+            ...req.body,
+            ...req.params
+        }
+
+        console.log('req.fnParams', req.fnParams)
+
+        const pastChatrooms = await model.updateLanguage(req, res);
+
+        response.data = pastChatrooms
+
+        return response;
+    } catch (error) {
+        padayon.ErrorHandler(
+            "Controller::Chatroom::updateLanguage",
+            error,
+            req,
+            res
+        );
+    }
+};
+

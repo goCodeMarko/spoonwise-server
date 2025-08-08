@@ -5,6 +5,8 @@ const padayon = require("../services/padayon"),
     chatroomController = require('./chatroom'),
     server = require('../server'),
     moment = require("moment-timezone"),
+    openai = require("../services/openai"),
+    cloudinary = require("./../services/cloudinary"),
     model = require(`./../models/${base}`);
 
 
@@ -57,34 +59,92 @@ module.exports.totalCountSentMessages = async (req, res) => {
     }
 };
 
+
+
+
 module.exports.sendMessage = async (req, res) => {
     try {
         let response = { success: true, code: 200 };
 
+        // Prepare initial parameters for message model
         req.fnParams = {
             chatroomId: req.params.chatroomId,
+
         }
-        console.log('req.fnParams', req.fnParams)
-        const chatroom = await chatroomController.getChatroom(req, res);
-        const [chatroomObj] = chatroom.data.data
-        console.log('xxxxxxxxxxxxxx', chatroomObj)
+
+        const { file } = req;
+        let upload;
+        console.log('----------------------file', file)
+        if (file) {
+            // try {
+            console.log('1')
+            req.body = JSON.parse(req.body.details)
+            console.log('2')
+            const { path } = file;
+            console.log('3')
+            const id = Math.random().toString(36).substring(2, 9);
+            console.log('4', file.path)
+            upload = await cloudinary.uploader.upload(file.path, {
+                folder: "spoonwise",
+                public_id: id + '_' + file.originalname.split('.')[0],
+                type: "authenticated",
+                resource_type: "auto",
+            });
+            console.log('5')
+            req.body.attachments = [{ url: upload.secure_url }]
+            // } catch (error) {
+            //     console.log('error', error)
+            // }
+
+        }
+
+        // Fetch the chatroom details
+        const getChatroom = await chatroomController.getChatroom(req, res);
+        // Destructure the first chatroom object from the response
+        const [chatroom] = getChatroom.data.data
+
+        // Re-assign fnParams for sending a new message
         req.fnParams = {
             elementId: req.body.elementId,
             chatroomId: req.params.chatroomId,
-            senderId: req.auth.role === 'seller' ? req.auth.shop?._id : req.auth._id,
-            receiverId: req.auth.role === 'seller' ? chatroomObj.users.buyer._id : chatroomObj.users.shop._id,
-            content: req.body.content,
+            content: {
+                message: req.body.content.message,
+                buttons: req.body.content.buttons || false,
+                attachments: req.body.attachments
+            },
             status: "SENT"
         }
 
-        console.log('req.fnParams', req.fnParams)
+        // If the chatroom is not with an AI agent, assign sender and receiver manually
+        if (!chatroom.isAIAgent) {
+            // Determine the senderId based on user's role
+            req.fnParams.senderId =
+                req.auth.role === 'seller' ? req.auth.shop?._id : req.auth._id;
+            // Determine the receiverId (the other participant in the chat)
+            req.fnParams.receiverId =
+                req.auth.role === 'seller'
+                    ? chatroom.users.buyer._id
+                    : chatroom.users.shop._id;
+        } else {
+            // If it's an AI chatroom, check if the message is from the AI agent
+            if (req.query.msgFromAIAgent) req.fnParams.isAIAgent = true; // Set isAIAgent to true if the message is from the AI agent
+            else req.fnParams.isAIAgent = false; // Otherwise, it's from the user
+        }
+
         const sendMessage = await model.sendMessage(req, res);
-        console.log('sendMessage', sendMessage)
-        const receiverId = sendMessage.receiverId.toString();
 
-        server.io.to(receiverId).emit('onNewChatMessage', { message: sendMessage, chatroom: chatroomObj });
+        // If the chatroom is not with an AI agent, emit the new message to the receiver
+        if (!chatroom.isAIAgent) {
+            const receiverId = sendMessage.receiverId.toString();
+            if (!noEmitOnNewChatMessage) server.io.to(receiverId).emit('onNewChatMessage', { message: sendMessage, chatroom });
+        }
+        else if (chatroom.isAIAgent && !req.fnParams.isAIAgent) { // If it's an AI chatroom and the message is from the user
+            req.chatroom = chatroom
+            openai.generateChatResponse(req, res); // Generate a response from the AI agent
+        }
 
-        response.data = sendMessage;
+        response.data = { ...sendMessage?._doc, isAIAgent: chatroom.isAIAgent };
+
         return response;
     } catch (error) {
         padayon.ErrorHandler(
@@ -95,6 +155,7 @@ module.exports.sendMessage = async (req, res) => {
         );
     }
 };
+
 
 
 module.exports.updateChatroomsMsgStatusToDelivered = async (req, res) => {
@@ -127,14 +188,21 @@ module.exports.updateChatroomsMsgStatusToDelivered = async (req, res) => {
 module.exports.updateChatroomsMsgStatusToSeen = async (req, res) => {
     try {
         let response = { success: true, code: 200 };
-
+        console.log('--...req.query', req.query)
+        const isSpoonwiseAI = req.query.isSpoonwiseAI === 'true';
         req.fnParams = {
-            ...req.params
+            ...req.params,
+            isSpoonwiseAI
         }
-
+        console.log('----fnParams', req.fnParams)
         const chatroom = await model.updateChatroomsMsgStatusToSeen(req, res);
-        console.log('----chatroom', chatroom)
-        response.data = { chatroomId: chatroom.messagesToUpdate.chatroomId.toString(), senderId: chatroom.messagesToUpdate.senderId.toString(), receiverId: chatroom.messagesToUpdate.receiverId.toString(), };
+        console.log('----fnParams', req.fnParams)
+        console.log('-------------chatroom.messagesToUpdate.chatroomId', chatroom.messagesToUpdate.chatroomId)
+        response.data = {
+            chatroomId: chatroom.messagesToUpdate.chatroomId.toString(),
+            senderId: !isSpoonwiseAI ? chatroom.messagesToUpdate.senderId.toString() : '',
+            receiverId: !isSpoonwiseAI ? chatroom.messagesToUpdate.receiverId.toString() : ''
+        };
 
 
         server.io.to(response.data.senderId).emit('onUpdateChatroomsMsgStatusToSeen', { ...response.data });

@@ -23,4 +23,12 @@ router.get(
     })
 );
 
+router.put(
+    `/api/${base}/updateLanguage/:chatroomId`,
+    execute(controller.updateLanguage, {
+        secured: true,
+        role: ["buyer", "seller"],
+    })
+);
+
 module.exports = router;

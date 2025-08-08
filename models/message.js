@@ -13,14 +13,17 @@ Message = mongoose.model(
         {
             elementId: { type: String, required: true },
             chatroomId: { type: mongoose.Schema.Types.ObjectId, ref: 'Chatroom' },
-            senderId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-            receiverId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+            senderId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
+            receiverId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
             content: {
                 orderId: { type: mongoose.Schema.Types.ObjectId, ref: 'Order', required: false },
                 productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: false },
-                message: { type: String }
+                message: { type: String, required: false },
+                attachments: [{ url: { type: String, required: false } }],
+                buttons: { type: mongoose.Schema.Types.Boolean, default: false }
             },
-            status: { type: String }
+            status: { type: String },
+            isAIAgent: { type: mongoose.Schema.Types.Boolean },
         },
         { timestamps: true }
     )
@@ -100,6 +103,8 @@ module.exports.sendMessage = async (req, res) => {
     try {
         const body = req.fnParams;
 
+        console.log('body', body)
+
         const message = new Message(body);
 
         const result = await message.save();
@@ -109,9 +114,7 @@ module.exports.sendMessage = async (req, res) => {
             body.chatroomId,
             { $set: { updatedAt: new Date() } }
         );
-        console.log('result', result)
-        console.log('chatroom', chatroom.updatedAt)
-
+        console.log('---------result', result)
         return result;
     } catch (error) {
         padayon.ErrorHandler(
@@ -184,21 +187,21 @@ module.exports.updateChatroomsMsgStatusToSeen = async (req, res) => {
     const session = await mongoose.startSession();
     session.startTransaction(); // ✅ Start transaction 
     try {
+        const filter = {
+            chatroomId: new mongoose.Types.ObjectId(req.fnParams.chatroomId),
+            status: { $in: ['SENT', 'DELIVERED'] },
+        };
+
+        if (!req.fnParams.isSpoonwiseAI) {
+            filter.receiverId = req.auth.role === 'seller' ? req.auth.shop?._id : req.auth._id;
+        }
         const messagesToUpdate = await Message.findOne(
-            {
-                chatroomId: new mongoose.Types.ObjectId(req.fnParams.chatroomId),
-                status: { $in: ['SENT', 'DELIVERED'] },
-                receiverId: req.auth.role === 'seller' ? req.auth.shop?._id : req.auth._id
-            },
+            filter,
             { chatroomId: 1, senderId: 1, receiverId: 1 }
         );
 
         const result = await Message.updateMany(
-            {
-                chatroomId: new mongoose.Types.ObjectId(req.fnParams.chatroomId),
-                status: { $in: ['SENT', 'DELIVERED'] },
-                receiverId: req.auth.role === 'seller' ? req.auth.shop?._id : req.auth._id
-            },
+            filter,
             {
                 $set: { status: 'SEEN' }
             },

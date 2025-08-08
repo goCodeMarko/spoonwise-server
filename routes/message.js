@@ -5,6 +5,7 @@ const { execute } = require("../services/padayon"),
     base = path.basename(__filename, ".js"),
     express = require("express"),
     router = express.Router(),
+    multer = require('./../services/multer'),
     controller = require(`../controllers/${base}`);
 
 
@@ -27,6 +28,7 @@ router.get(
 
 router.post(
     `/api/${base}/sendMessage/:chatroomId`,
+    multer.single("image"),
     execute(controller.sendMessage, {
         secured: true,
         role: ["buyer", "seller"],

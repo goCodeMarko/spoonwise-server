@@ -12,6 +12,10 @@ Chatroom = mongoose.model(
             users: {
                 shopId: { type: mongoose.Schema.Types.ObjectId, ref: 'Shop' },
                 buyerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+            },
+            isAIAgent: { type: mongoose.Schema.Types.Boolean, default: false },
+            settings: {
+                language: { type: String, enum: ["ENGLISH", "TAGALOG", "CEBUANO", "ILOCANO", "HILIGAYNON", "KAPAMPANGAN", "WARAY"], default: "ENGLISH" },
             }
         },
         { timestamps: true }
@@ -37,7 +41,7 @@ module.exports.getPastChatrooms = async (req, res) => {
             filter["users.shopId"] = new mongoose.Types.ObjectId(req.auth.shop?._id);
             id = new mongoose.Types.ObjectId(req.auth.shop?._id);
         }
-        console.log('--filter', filter)
+
         const result = await Chatroom.aggregate([
             { $match: filter },
             { $sort: { updatedAt: -1 } },
@@ -405,7 +409,8 @@ module.exports.getChatrooms = async (req, res) => {
                                 content: {
                                     message: 1,
                                     order: "$order",
-                                    product: "$product"
+                                    product: "$product",
+                                    attachments: 1,
                                 },
                                 status: 1,
                                 createdAt: 1,
@@ -465,7 +470,11 @@ module.exports.getChatrooms = async (req, res) => {
             }
         ]);
 
-        response = result;
+        const [spoonwiseAIChatroom] = await getSpoonwiseAIChatroom(req, res);
+        response = {
+            chatrooms: result,
+            spoonwiseAI: spoonwiseAIChatroom
+        };
         return response;
     } catch (error) {
         padayon.ErrorHandler(
@@ -477,15 +486,194 @@ module.exports.getChatrooms = async (req, res) => {
     }
 };
 
+getSpoonwiseAIChatroom = async (req, res) => {
+
+    try {
+
+        const id = new mongoose.Types.ObjectId(req.auth.spoonwiseAI);
+        console.log('----req.auth.spoonwiseAI', req.auth.spoonwiseAI)
+        const result = await Chatroom.aggregate([
+            { $match: { _id: id } },
+            {
+                $lookup: {
+                    from: "messages",
+                    let: { chatroomId: "$_id" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $eq: ["$chatroomId", "$$chatroomId"]
+                                }
+                            }
+                        },
+                        {
+                            $match: { status: "SENT" }
+                        },
+                        {
+                            $count: "sentMessageCount"
+                        }
+                    ],
+                    as: "sentMessagesCount"
+                }
+            },
+            {
+                $lookup: {
+                    from: "messages",
+                    let: { chatroomId: "$_id", shopId: "$users.shopId" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $eq: ["$chatroomId", "$$chatroomId"]
+                                }
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "orders",
+                                localField: "content.orderId",
+                                foreignField: "_id",
+                                as: "order"
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "products",
+                                localField: "content.productId",
+                                foreignField: "_id",
+                                as: "product"
+                            }
+                        },
+                        {
+                            $addFields: {
+                                order: {
+                                    $cond: [
+                                        { $gt: [{ $size: "$order" }, 0] },
+                                        {
+                                            $let: {
+                                                vars: {
+                                                    fullOrder: { $arrayElemAt: ["$order", 0] },
+                                                    shopId: "$$shopId"
+                                                },
+                                                in: {
+                                                    $mergeObjects: [
+                                                        "$$fullOrder",
+                                                        {
+                                                            cart: {
+                                                                $arrayElemAt: [{
+                                                                    $filter: {
+                                                                        input: "$$fullOrder.cart",
+                                                                        as: "cartItem",
+                                                                        cond: {
+                                                                            $eq: ["$$cartItem.shopId", "$$shopId"]
+                                                                        }
+                                                                    }
+                                                                }, 0]
+
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        null
+                                    ]
+                                },
+                                product: { $arrayElemAt: ["$product", 0] }
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 1,
+                                senderId: 1,
+                                content: {
+                                    message: 1,
+                                    order: "$order",
+                                    product: "$product",
+                                    buttons: 1,
+                                    attachments: 1,
+                                },
+                                isAIAgent: 1,
+                                status: 1,
+
+                                createdAt: 1,
+                                updatedAt: 1
+                            }
+                        },
+                        {
+                            $sort: { createdAt: -1 }
+                        },
+                        {
+                            $limit: 20
+                        },
+
+                    ],
+                    as: "latestMessages"
+                }
+            },
+            {
+                $lookup: {
+                    from: "messages",
+                    let: { chatroomId: "$_id" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $eq: ["$chatroomId", "$$chatroomId"]
+                                }
+                            }
+                        },
+                        {
+                            $match: { status: { $in: ["DELIVERED", "SENT"] }, isAIAgent: true }
+                        },
+                        {
+                            $count: "sentMessageCount"
+                        }
+                    ],
+                    as: "sentMessagesCount"
+                }
+            },
+            {
+                $addFields: {
+                    sentMessageCount: { $ifNull: [{ $arrayElemAt: ["$sentMessagesCount.sentMessageCount", 0] }, 0] }
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    latestMessages: 1,
+                    sentMessageCount: 1,
+                    settings: 1,
+                    createdAt: 1,
+                    updatedAt: 1
+                }
+            }
+
+        ]);
+        if (result.length === 0) {
+            throw new padayon.BadRequestException("Spoonwise AI chatroom not found");
+        }
+        response = result;
+        return response;
+    } catch (error) {
+        padayon.ErrorHandler(
+            "Model::Chatroom::getSpoonwiseAIChatroom",
+            error,
+            req,
+            res
+        );
+    }
+};
 
 module.exports.getChatroom = async (req, res) => {
 
     try {
         let response = {};
         let id = new mongoose.Types.ObjectId(req.auth._id);
-        console.log('werwerwerwerwe1')
+
         let chatroomIdx = new mongoose.Types.ObjectId(req.fnParams.chatroomId)
-        console.log('werwerwerwerwe2')
+
+
         const result = await Chatroom.aggregate([
             { $match: { _id: chatroomIdx } },
             {
@@ -625,6 +813,7 @@ module.exports.getChatroom = async (req, res) => {
                                     order: "$order",
                                     product: "$product"
                                 },
+                                isAIAgent: 1,
                                 status: 1,
                                 createdAt: 1,
                                 updatedAt: 1
@@ -677,12 +866,14 @@ module.exports.getChatroom = async (req, res) => {
                     },
                     latestMessages: 1,
                     sentMessageCount: 1,
+                    isAIAgent: 1,
+                    settings: 1,
                     createdAt: 1,
                     updatedAt: 1
                 }
             }
         ]);
-        console.log('0------------', result)
+
         response.data = result;
         return response;
     } catch (error) {
@@ -694,3 +885,35 @@ module.exports.getChatroom = async (req, res) => {
         );
     }
 };
+
+module.exports.updateLanguage = async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        const result = await Chatroom.findOneAndUpdate(
+            {
+                _id: new mongoose.Types.ObjectId(req.fnParams.chatroomId),
+            },
+            {
+                $set: { 'settings.language': req.fnParams.language }
+            },
+            {
+                new: true
+            }
+        );
+
+        await session.commitTransaction();
+        session.endSession();
+        console.log('----result', result)
+        return { result };
+    } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        padayon.ErrorHandler(
+            "Model::Chatroom::updateLanguage",
+            error,
+            req,
+            res
+        );
+    }
+}

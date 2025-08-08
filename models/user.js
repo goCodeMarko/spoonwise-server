@@ -237,7 +237,8 @@ module.exports.authenticate = async (req, res, callback) => {
           company: 1,
           branch: 1,
           coordinates: 1,
-          cart: 1
+          cart: 1,
+          spoonwiseAI: 1
         },
       },
     ]);

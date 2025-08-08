@@ -5,7 +5,9 @@ const padayon = require("../services/padayon"),
   {
     saveAsDraftTab2DTO,
     saveAsDraftTab3DTO,
-    sendApplicationDTO
+    sendApplicationDTO,
+    declineApplicationDTO,
+    approveApplicationDTO
   } = require("../services/dto"),
   model = require(`./../models/${base}`),
   email = require("../services/email"),
@@ -30,6 +32,28 @@ module.exports.getShops = async (req, res) => {
   } catch (error) {
     padayon.ErrorHandler(
       "Controller::Shops::getShops",
+      error,
+      req,
+      res
+    );
+  }
+};
+
+module.exports.getNearestShops = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+
+    const result = await model.getNearestShops(req, res);
+    response.data = result;
+
+    // if (_.size(result) === 0) {
+    //   response.data = [];
+    // }
+
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler(
+      "Controller::Shops::getNearestShops",
       error,
       req,
       res
@@ -281,6 +305,71 @@ module.exports.sendApplication = async (req, res) => {
   } catch (error) {
     padayon.ErrorHandler(
       "Controller::Shop::sendApplication",
+      error,
+      req,
+      res
+    );
+  }
+};
+
+module.exports.declineApplication = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+
+    const { body } = req;
+
+    const joi = {
+      shopId: body.shopId,
+      status: 'DECLINED',
+      tab1: body.tab1,
+      tab2: body.tab2,
+      tab3: body.tab3
+    };
+
+    await declineApplicationDTO.validateAsync(joi);
+
+    req.fnParams = {
+      ...joi
+    };
+
+    const result = await model.declineApplication(req, res);
+    response.data = result;
+
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler(
+      "Controller::Shop::declineApplication",
+      error,
+      req,
+      res
+    );
+  }
+};
+
+module.exports.approveApplication = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+
+    const { body } = req;
+
+    const joi = {
+      shopId: body.shopId,
+      status: 'APPROVED',
+    };
+
+    await approveApplicationDTO.validateAsync(joi);
+
+    req.fnParams = {
+      ...joi
+    };
+
+    const result = await model.approveApplication(req, res);
+    response.data = result;
+
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler(
+      "Controller::Shop::approveApplication",
       error,
       req,
       res
