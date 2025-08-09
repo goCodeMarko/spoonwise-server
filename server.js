@@ -59,13 +59,14 @@
 
     this.io.on("connection", (socket) => {
       const socketId = socket.id;
+
       const { userId, role, shopId } = socket.handshake.auth;
 
       if (role == 'seller') {
-        socket.join(shopId);
-        console.log(`A seller shopid ${shopId} connected`);
+        socket.join(shopId._id);
+        console.log(`A seller shopid ${shopId._id} connected`);
         console.log('---socketId', socketId)
-        console.log('---shopId', shopId)
+        console.log('---shop._id', shopId._id)
         console.log(socket.handshake.auth);
       } else {
         socket.join(userId);

@@ -185,13 +185,15 @@ module.exports.processWithOpenAI = async (req, res) => {
 
         const temporaryMessageId = Math.random().toString(36).substring(2, 9);
         let msg = '';
-
+        console.log('@@@@@@@@@@@@', req.auth.shop._id);
+        console.log('@@@@@@@@@@@@', req.auth.role);
         for await (const chunk of stream) {
             const chunks = chunk.choices[0]?.delta?.content || "";
 
             if (chunks) {
                 msg += chunks;
-                server.io.to(req.auth._id).emit("onReceivedChunksFromAI", { chunks, temporaryMessageId });
+                if (req.auth.role === 'seller') server.io.to(req.auth.shop._id).emit("onReceivedChunksFromAI", { chunks, temporaryMessageId });
+                else if (req.auth.role === 'buyer') server.io.to(req.auth._id).emit("onReceivedChunksFromAI", { chunks, temporaryMessageId });
             }
 
             // Detect when the stream ends
@@ -207,9 +209,11 @@ module.exports.processWithOpenAI = async (req, res) => {
                 req.file = false;
                 req.noEmitOnNewChatMessage = true;
                 const sendMessage = await messageController.sendMessage(req, res);
-                console.log('-----------sendMessage', sendMessage)
 
-                server.io.to(req.auth._id).emit("onAIStreamComplete", { message: sendMessage, temporaryMessageId });
+                if (req.auth.role === 'seller') server.io.to(req.auth.shop._id).emit("onAIStreamComplete", { message: sendMessage, temporaryMessageId });
+                else if (req.auth.role === 'buyer') server.io.to(req.auth._id).emit("onAIStreamComplete", { message: sendMessage, temporaryMessageId });
+
+                break;
             }
         }
     } catch (error) {
