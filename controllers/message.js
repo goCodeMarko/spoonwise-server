@@ -136,7 +136,7 @@ module.exports.sendMessage = async (req, res) => {
         // If the chatroom is not with an AI agent, emit the new message to the receiver
         if (!chatroom.isAIAgent) {
             const receiverId = sendMessage.receiverId.toString();
-            if (!noEmitOnNewChatMessage) server.io.to(receiverId).emit('onNewChatMessage', { message: sendMessage, chatroom });
+            if (!req.noEmitOnNewChatMessage) server.io.to(receiverId).emit('onNewChatMessage', { message: sendMessage, chatroom });
         }
         else if (chatroom.isAIAgent && !req.fnParams.isAIAgent) { // If it's an AI chatroom and the message is from the user
             req.chatroom = chatroom
