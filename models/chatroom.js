@@ -15,7 +15,7 @@ Chatroom = mongoose.model(
             },
             isAIAgent: { type: mongoose.Schema.Types.Boolean, default: false },
             settings: {
-                language: { type: String, enum: ["ENGLISH", "TAGALOG", "CEBUANO", "ILOCANO", "HILIGAYNON", "KAPAMPANGAN", "WARAY"], default: "ENGLISH" },
+                language: { type: String, enum: ["ENGLISH", "TAGALOG", "CEBUANO", "ILOCANO", "HILIGAYNON", "KAPAMPANGAN", "WARAY"] },
             }
         },
         { timestamps: true }
@@ -478,7 +478,7 @@ module.exports.getChatrooms = async (req, res) => {
         return response;
     } catch (error) {
         padayon.ErrorHandler(
-            "Model::Order::getChatrooms",
+            "Model::Chatroom::getChatrooms",
             error,
             req,
             res
@@ -917,3 +917,51 @@ module.exports.updateLanguage = async (req, res) => {
         );
     }
 }
+
+module.exports.checkChatroomExists = async (req, res) => {
+    try {
+        const result = await Chatroom.findOne(
+            {
+                users: {
+                    shopId: new mongoose.Types.ObjectId(req.fnParams.shopId),
+                    buyerId: new mongoose.Types.ObjectId(req.auth._id)
+                }
+            }
+        );
+
+        return result;
+    } catch (error) {
+        padayon.ErrorHandler(
+            "Model::Chatroom::checkChatroomExists",
+            error,
+            req,
+            res
+        );
+    }
+}
+
+module.exports.createChatroom = async (req, res) => {
+    try {
+        const body = {
+            users: {
+                buyerId: new mongoose.Types.ObjectId(req.auth._id),
+                shopId: new mongoose.Types.ObjectId(req.fnParams.shopId)
+            }
+        };
+
+        const chatroom = new Chatroom(body);
+
+        const result = await chatroom.save();
+
+
+        return result;
+    } catch (error) {
+        padayon.ErrorHandler(
+            "Model::Chatroom::createChatroom",
+            error,
+            req,
+            res
+        );
+    }
+}
+

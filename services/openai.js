@@ -182,8 +182,7 @@ module.exports.processWithOpenAI = async (req, res) => {
         const endTime = Date.now();
         const duration = (endTime - startTime) / 1000;
         console.log(`OpenAI started the stream after ${duration} seconds`);
-        console.log('---req.auth.role', req.auth.role)
-        console.log('---req.auth._id', req.auth._id)
+
         const temporaryMessageId = Math.random().toString(36).substring(2, 9);
         let msg = '';
 

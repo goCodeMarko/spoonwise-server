@@ -11,7 +11,7 @@ Message = mongoose.model(
     base,
     mongoose.Schema(
         {
-            elementId: { type: String, required: true },
+            elementId: { type: String },
             chatroomId: { type: mongoose.Schema.Types.ObjectId, ref: 'Chatroom' },
             senderId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
             receiverId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },

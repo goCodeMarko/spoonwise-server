@@ -31,4 +31,12 @@ router.put(
     })
 );
 
+router.get(
+    `/api/${base}/chatSeller`,
+    execute(controller.chatSeller, {
+        secured: true,
+        role: ["buyer"],
+    })
+);
+
 module.exports = router;
