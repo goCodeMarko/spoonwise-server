@@ -679,7 +679,7 @@ module.exports.checkOTP = async (req, res) => {
     //     { errorType: 'OTP_INCORRECT' }
     //   );
     // } else if (currentOTP.code === req.fnParams.otp) {
-    const otpDetails = await model.consumedOTP(req, res);
+    await model.consumedOTP(req, res);
     response.data = { message: 'OTP_SUCCESS' };
     // }
 
