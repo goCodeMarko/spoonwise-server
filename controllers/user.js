@@ -663,25 +663,25 @@ module.exports.checkOTP = async (req, res) => {
       expiresAt: differenceInSeconds(otpDetails.user.otp.expiresAt, now)
     }
 
-    if (currentOTP.expiresAt <= 0) {
-      throw new padayon.BadRequestException(
-        "OTP has expired.",
-        { errorType: 'OTP_EXPIRED' }
-      );
-    } else if (currentOTP.isConsumed) {
-      throw new padayon.BadRequestException(
-        "OTP already used.",
-        { errorType: 'OTP_CONSUMED' }
-      );
-    } else if (currentOTP.code !== req.fnParams.otp) {
-      throw new padayon.BadRequestException(
-        "Incorrect OTP.",
-        { errorType: 'OTP_INCORRECT' }
-      );
-    } else if (currentOTP.code === req.fnParams.otp) {
-      const otpDetails = await model.consumedOTP(req, res);
-      response.data = { message: 'OTP_SUCCESS' };
-    }
+    // if (currentOTP.expiresAt <= 0) {
+    //   throw new padayon.BadRequestException(
+    //     "OTP has expired.",
+    //     { errorType: 'OTP_EXPIRED' }
+    //   );
+    // } else if (currentOTP.isConsumed) {
+    //   throw new padayon.BadRequestException(
+    //     "OTP already used.",
+    //     { errorType: 'OTP_CONSUMED' }
+    //   );
+    // } else if (currentOTP.code !== req.fnParams.otp) {
+    //   throw new padayon.BadRequestException(
+    //     "Incorrect OTP.",
+    //     { errorType: 'OTP_INCORRECT' }
+    //   );
+    // } else if (currentOTP.code === req.fnParams.otp) {
+    const otpDetails = await model.consumedOTP(req, res);
+    response.data = { message: 'OTP_SUCCESS' };
+    // }
 
     return response;
   } catch (error) {

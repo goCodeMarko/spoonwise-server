@@ -100,7 +100,6 @@ module.exports.sendMessage = async (req, res) => {
 
         // Fetch the chatroom details
         const getChatroom = await chatroomController.getChatroom(req, res);
-        console.log('------------getChatroom', getChatroom)
         // Destructure the first chatroom object from the response
         const [chatroom] = getChatroom.data.data
 
