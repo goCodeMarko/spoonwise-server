@@ -26,6 +26,14 @@ router.get(
 ); //---------done
 
 router.get(
+  `/api/${base}/getShop`,
+  execute(controller.getShop, {
+    secured: true,
+    role: ["seller"],
+  })
+); //---------done
+
+router.get(
   `/api/${base}/getNearestShops`,
   execute(controller.getNearestShops, {
     secured: true,

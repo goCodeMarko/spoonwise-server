@@ -67,6 +67,20 @@ module.exports.getUsers = async (req, res) => {
   }
 };
 
+module.exports.getBuyers = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+    const buyers = await model.getBuyers(req, res);
+    console.log('------buyers', buyers)
+    response.data = buyers;
+
+
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Controller::User::getBuyers", error, req, res);
+  }
+};
+
 module.exports.authenticate = async (req, res) => {
   try {
     let response = { success: true, code: 200 };

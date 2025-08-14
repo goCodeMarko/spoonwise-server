@@ -184,6 +184,18 @@ module.exports.getShops = async (req, res) => {
   }
 };
 
+// module.exports.getShop = async (req, res) => {
+//   try {
+//     console.log('-----req.auth', req.auth)
+
+//     const shop = await Shop.findById(req.params.id).projection({ coordinates: 1, businessName: 1 });
+//     console.log('shop', shop)
+//     return shop;
+//   } catch (error) {
+//     padayon.ErrorHandler("Model::Category::getShop", error, req, res);
+//   }
+// };
+
 module.exports.getNearestShops = async (req, res) => {
   try {
     const buyer = {
@@ -569,8 +581,8 @@ module.exports.getShopList = async (req, res) => {
 
 module.exports.getShop = async (req, res) => {
   try {
-    const shopId = req.params.shopId
-    console.log('--------------shopId', shopId)
+    const shopId = req.params.shopId || req.auth.shop._id;
+
     const MQLBuilder = [
       { $match: { _id: new mongoose.Types.ObjectId(shopId) } },
       {

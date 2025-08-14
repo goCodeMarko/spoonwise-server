@@ -126,9 +126,9 @@ module.exports.getShopList = async (req, res) => {
 module.exports.getShop = async (req, res) => {
   try {
     let response = { success: true, code: 200 };
-    console.log('=========result', req.params)
-    const [result] = await model.getShop(req, res);
 
+    const [result] = await model.getShop(req, res);
+    console.log('=========result', result)
     response.data = result;
 
     // if (_.size(result) === 0) {

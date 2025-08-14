@@ -30,6 +30,13 @@ router.get(
   })
 ); //---------done
 
+router.get(
+  `/api/${base}/getBuyers`,
+  execute(controller.getBuyers, {
+    secured: true,
+  })
+); //---------done
+
 router.put(
   `/api/${base}/updateUserAccess/:id`,
   execute(controller.updateUserAccess, {

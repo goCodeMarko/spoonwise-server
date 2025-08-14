@@ -155,42 +155,16 @@ module.exports.getUser = async (req, res, callback) => {
   }
 }; //---------done
 
-module.exports.getUsers = async (req, res, callback) => {
+module.exports.getBuyers = async (req, res) => {
   try {
-    let response = {};
-    const result = await User.aggregate([
-      {
-        $match: {
-          role: "admin",
-        },
-      },
-      {
-        $project: {
-          email: 1,
-          role: 1,
-          fullname: {
-            $concat: ["$firstname", " ", "$lastname"],
-          },
-          firstname: 1,
-          lastname: 1,
-          isallowedtodelete: 1,
-          isallowedtocreate: 1,
-          isallowedtoupdate: 1,
-          isblock: 1,
-          id_card: 1,
-          barcode: 1,
-          qrcode: 1,
-          profile_picture: 1,
-          company: 1,
-          branch: 1,
-        },
-      },
-    ]);
+
+    const result = await User.find({ role: "buyer" }).populate(['coordinates']);
 
     response = result;
-    callback(response);
+
+    return response
   } catch (error) {
-    padayon.ErrorHandler("Model::User::getUsers", error, req, res);
+    padayon.ErrorHandler("Model::User::getBuyers", error, req, res);
   }
 };
 
