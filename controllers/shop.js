@@ -126,14 +126,10 @@ module.exports.getShopList = async (req, res) => {
 module.exports.getShop = async (req, res) => {
   try {
     let response = { success: true, code: 200 };
-
     const [result] = await model.getShop(req, res);
-    console.log('=========result', result)
+
     response.data = result;
 
-    // if (_.size(result) === 0) {
-    //   response.data = [];
-    // }
 
     return response;
   } catch (error) {

@@ -6,6 +6,7 @@ const path = require("path"),
   padayon = require("../services/padayon"),
   Shop = require('./shop'),
   bcrypt = require("bcrypt"),
+  Blog = require('./blog'),
   _ = require('lodash');
 
 
@@ -95,6 +96,7 @@ User = mongoose.model(
     isallowedtocreate: { type: Boolean, default: true },
     isallowedtoupdate: { type: Boolean, default: true },
     isblock: { type: Boolean, default: false },
+    savedBlogs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Blog' },],
     coordinates: {
       lat: { type: Number },
       lng: { type: Number }
@@ -774,4 +776,47 @@ module.exports.updateBuyerLocation = async (req, res) => {
   } catch (error) {
     padayon.ErrorHandler("Model::User::updateBuyerLocation", error, req, res);
   }
-}; 
+};
+
+module.exports.saveBlog = async (req, res) => {
+  try {
+
+    const result = await User.updateOne(
+      { _id: req.auth._id },
+      { $addToSet: { savedBlogs: new mongoose.Types.ObjectId(req.fnParams.blogId) } }
+    );
+    console.log('----------result', result)
+    console.log('----------req.fnParams.blogId', req.fnParams.blogId)
+    console.log('----------req.auth._id', req.auth._id)
+    return result;
+  } catch (error) {
+    padayon.ErrorHandler("Model::User::saveBlog", error, req, res);
+  }
+};
+
+module.exports.unsaveBlog = async (req, res) => {
+  try {
+
+    const result = await User.updateOne(
+      { _id: new mongoose.Types.ObjectId(req.auth._id) },
+      { $pull: { savedBlogs: req.params.blogId } }
+    );
+
+    return result;
+  } catch (error) {
+    padayon.ErrorHandler("Model::User::unsaveBlog", error, req, res);
+  }
+};
+
+module.exports.getSavedBlogs = async (req, res) => {
+  try {
+    const result = await User.findOne({ _id: new mongoose.Types.ObjectId(req.fnParams.userId) }).populate({
+      path: 'savedBlogs',
+
+    }).select('savedBlogs');
+    console.log('-------------xxw2', result)
+    return result;
+  } catch (error) {
+    padayon.ErrorHandler("Model::User::getSavedBlogs", error, req, res);
+  }
+}

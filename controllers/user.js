@@ -19,6 +19,8 @@ bookController = require(`./../controllers/book`),
   email = require("./../services/email"),
   id_card = require("./../services/id_card"),
   Product = require('./product'),
+  blogModel = require('./../models/blog'),
+  blogController = require('./blog'),
   moment = require("moment-timezone"),
   { differenceInMinutes, differenceInSeconds } = require("date-fns"),
   cloudinary = require("./../services/cloudinary");
@@ -755,3 +757,78 @@ module.exports.updateBuyerLocation = async (req, res) => {
     padayon.ErrorHandler("Controller::User::updateBuyerLocation", error, req, res);
   }
 }; //---------done
+
+module.exports.saveBlog = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+
+    console.log('-------req.params', req.params)
+
+
+    const blog = await blogController.getBlog(req, res);
+
+    console.log('-------blog', blog)
+
+    if (!blog.data) {
+      throw new padayon.BadRequestException("Blog not found");
+    }
+
+    req.fnParams = {
+      blogId: req.params.blogId
+    }
+
+    const data = await model.saveBlog(req, res);
+
+    response.data = data;
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Controller::User::saveBlog", error, req, res);
+  }
+};
+
+
+module.exports.unsaveBlog = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+
+    console.log('-------req.params', req.params)
+
+
+    const blog = await blogController.getBlog(req, res);
+
+    console.log('-------blog', blog)
+
+    if (!blog.data) {
+      throw new padayon.BadRequestException("Blog not found");
+    }
+
+    req.fnParams = {
+      blogId: req.params.id
+    }
+
+    const data = await model.unsaveBlog(req, res);
+
+    response.data = data;
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Controller::User::unsaveBlog", error, req, res);
+  }
+};
+
+
+module.exports.getSavedBlogs = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+    req.fnParams = {
+      userId: req.auth?._id,
+    };
+
+    const data = await model.getSavedBlogs(req, res);
+    console.log('---data', data)
+    response.data = data?.savedBlogs || [];
+
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Controller::User::getSavedBlogs", error, req, res);
+  }
+};

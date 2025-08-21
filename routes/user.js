@@ -186,4 +186,25 @@ router.put(
     secured: true,
   })
 ); //---------done
+
+router.post(
+  `/api/${base}/saveBlog/:blogId`,
+  execute(controller.saveBlog, {
+    secured: true,
+  })
+); //---------done
+
+router.put(
+  `/api/${base}/unsaveBlog/:blogId`,
+  execute(controller.unsaveBlog, {
+    secured: true,
+  })
+);
+
+router.get(
+  `/api/${base}/getSavedBlogs`,
+  execute(controller.getSavedBlogs, {
+    secured: true,
+  })
+); //---------done
 module.exports = router;

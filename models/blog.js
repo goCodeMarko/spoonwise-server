@@ -15,8 +15,26 @@ const BlogSchema = new mongoose.Schema({
   timestamps: true
 });
 
-const Blog = mongoose.model(base, BlogSchema);
+const Blog = mongoose.model('Blog', BlogSchema);
 
+module.exports = Blog;
+
+module.exports.getBlog = async (req, res) => {
+  try {
+    // const body = req.fnParams;
+    console.log('--------------xxxxxxxxxxxxx', req.fnParams)
+    const result = await Blog.findById(body.id);
+
+    return result;
+  } catch (error) {
+    padayon.ErrorHandler(
+      "Model::Blog::getBlog",
+      error,
+      req,
+      res
+    );
+  }
+}
 
 
 module.exports.createBlog = async (req, res) => {
