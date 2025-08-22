@@ -69,7 +69,7 @@ module.exports.checkout = async (req, res) => {
       xedit = await invoiceClient.createInvoice({
         data: {
           "amount": req.body.totalPayment,
-          "invoiceDuration": 60,
+          "invoiceDuration": 600,
           "externalId": _.toString(shops),
           "description": "Test Invoice",
           "currency": "PHP",
@@ -78,7 +78,7 @@ module.exports.checkout = async (req, res) => {
         }
       });
     }
-
+    console.log('-------------xedit', xedit)
     if (req.body.paymentMethod === 'ONLINE') {
       req.body.invoice = {
         "id": xedit.id,
@@ -90,6 +90,7 @@ module.exports.checkout = async (req, res) => {
         "currency": xedit.currency,
         "description": xedit.description,
         "url": xedit.invoiceUrl,
+        "expiryDate": xedit.expiryDate
       }
     }
 

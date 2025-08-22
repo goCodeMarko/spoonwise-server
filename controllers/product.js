@@ -71,20 +71,25 @@ module.exports.createProduct = async (req, res) => {
     const id = Math.random().toString(36).substring(2, 9);
 
     let uploads = [];
+    console.log('createProduct1', files)
 
     for (const file of files) {
       const { path } = file;
-
+      console.log('-------path', path)
       const upload = await cloudinary.uploader.upload(path, {
         folder: "spoonwise",
         public_id: id + '_' + file.originalname.split('.')[0],
         type: "authenticated",
         resource_type: "auto",
-      });
+      }).catch((error) => {
+        console.error('Cloudinary upload error:', error);
+        throw new Error('Cloudinary upload failed');
+      });;
+
 
       uploads.push(upload);
     }
-
+    console.log('createProduct2')
     // Convert local time to UTC using the client's timezone
     const dateTime = moment
       .tz(body.expiryDate, "YYYY-MM-DDTHH:mm:ss", req.timezone)
@@ -101,10 +106,11 @@ module.exports.createProduct = async (req, res) => {
       description: body.description,
       category: body.category,
       specialOffers: body.specialOffers,
-      isPublish: body.online,
+      isPublish: body.isPublished,
       images: uploads.map(img => img.secure_url)
     }
-
+    console.log('uploads', uploads)
+    console.log('req.fnParams', req.fnParams)
     const result = await model.createProduct(req, res);
     response.data = result;
 

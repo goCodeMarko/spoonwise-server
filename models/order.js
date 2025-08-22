@@ -122,7 +122,8 @@ Order = mongoose.model(
         payment_method: { type: String },
         payment_channel: { type: String },
         payment_method_id: { type: String },
-        success_redirect_url: { type: String }
+        success_redirect_url: { type: String },
+        expiryDate: { type: Date },
       },
     },
     { timestamps: true }
