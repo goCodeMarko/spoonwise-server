@@ -187,12 +187,18 @@ module.exports.getShops = async (req, res) => {
 module.exports.getNearestShops = async (req, res) => {
   try {
     const buyer = {
-      lat: req.auth.coordinates.lat,
-      lng: req.auth.coordinates.lng
+      lat: req.query.lat ? Number(req.query.lat) : req.auth.coordinates.lat,
+      lng: req.query.lng ? Number(req.query.lng) : req.auth.coordinates.lng
+    }
+    const radius = req.query.radius ? Number(req.query.radius) : 3;
+    const sortBy = req.query.sortBy;
+    console.log('---&', req.query)
+    const sortStage = { $sort: { distance: 1 } };
+    if (sortBy === 'rating') {
+      sortStage.$sort = { averageRating: -1 };
     }
 
     const MQLBuilder = [
-
       {
         $project: {
           _id: 1,
@@ -316,15 +322,10 @@ module.exports.getNearestShops = async (req, res) => {
             ]
           }
         }
-      }, {
-        $sort: {
-          distance: 1
-        }
       },
+
       {
-
         $lookup: {
-
           from: "orders",
           let: { shopId: "$_id" },
           pipeline: [
@@ -356,6 +357,7 @@ module.exports.getNearestShops = async (req, res) => {
           }
         }
       },
+      sortStage,
       {
         $lookup: {
 
@@ -390,9 +392,18 @@ module.exports.getNearestShops = async (req, res) => {
             ]
           }
         }
-      }
+      },
+      {
+        $set: {
+          distance: { $toDouble: '$distance' },
+        },
+      },
+
     ]
+
+    if (radius && req.auth.role === "buyer") MQLBuilder.push({ $match: { distance: { $lte: radius } } });
     const shops = await Shop.aggregate(MQLBuilder);
+
     console.log('shops', shops);
     return shops;
   } catch (error) {
@@ -570,6 +581,10 @@ module.exports.getShopList = async (req, res) => {
 module.exports.getShop = async (req, res) => {
   try {
     const shopId = req.params.shopId || req.auth.shop._id;
+    const buyer = {
+      lat: req.query.lat ? Number(req.query.lat) : req.auth.coordinates.lat,
+      lng: req.query.lng ? Number(req.query.lng) : req.auth.coordinates.lng
+    }
 
     const MQLBuilder = [
       { $match: { _id: new mongoose.Types.ObjectId(shopId) } },
@@ -590,9 +605,192 @@ module.exports.getShop = async (req, res) => {
           phoneNumber: 1,
           settlement_account: 1,
           verification_process: 1,
+          distance: {
+            $round: [
+              {
+                $multiply: [
+                  6371,
+                  {
+                    $acos: {
+                      $add: [
+                        {
+                          $multiply: [
+                            {
+                              $sin: {
+                                $multiply: [
+                                  {
+                                    $divide: [
+                                      { $toDouble: buyer.lat },
+                                      180
+                                    ]
+                                  },
+                                  3.141592653589793
+                                ]
+                              }
+                            },
+                            {
+                              $sin: {
+                                $multiply: [
+                                  {
+                                    $divide: [
+                                      { $toDouble: "$coordinates.lat" },
+                                      180
+                                    ]
+                                  },
+                                  3.141592653589793
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          $multiply: [
+                            {
+                              $cos: {
+                                $multiply: [
+                                  {
+                                    $divide: [
+                                      { $toDouble: buyer.lat },
+                                      180
+                                    ]
+                                  },
+                                  3.141592653589793
+                                ]
+                              }
+                            },
+                            {
+                              $cos: {
+                                $multiply: [
+                                  {
+                                    $divide: [
+                                      { $toDouble: "$coordinates.lat" },
+                                      180
+                                    ]
+                                  },
+                                  3.141592653589793
+                                ]
+                              }
+                            },
+                            {
+                              $cos: {
+                                $multiply: [
+                                  {
+                                    $subtract: [
+                                      {
+                                        $multiply: [
+                                          {
+                                            $divide:
+                                              [
+                                                { $toDouble: buyer.lng },
+                                                180
+                                              ]
+                                          },
+                                          3.141592653589793
+                                        ]
+                                      },
+                                      {
+                                        $multiply: [
+                                          {
+                                            $divide:
+                                              [
+                                                { $toDouble: "$coordinates.lng" },
+                                                180
+                                              ]
+                                          },
+                                          3.141592653589793
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              1
+            ]
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: "orders",
+          let: { shopId: "$_id" },
+          pipeline: [
+            { $unwind: "$cart" },
+
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$cart.shopId", "$$shopId"]
+                },
+                "cart.reviews.rate": { $gt: 0 }
+              }
+            },
+            {
+              $project: {
+                reviewRate: "$cart.reviews.rate"
+              }
+            }
+          ],
+          as: "productReviews"
+        }
+      }, {
+        '$addFields': {
+          'averageRating': {
+            '$avg': '$productReviews.reviewRate'
+          },
+          'totalReviews': {
+            '$size': '$productReviews'
+          }
+        }
+      },
+      {
+        $lookup: {
+
+          from: "products",
+          let: { shopId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$shopId", "$$shopId"] },
+                    { $eq: ["$isPublish", true] }
+                  ]
+                }
+              }
+            },
+            { $count: "count" }
+          ],
+          as: "productStats"
 
         }
-      }];
+      },
+      {
+        $addFields: {
+          productCount: {
+            $cond: [
+              { $gt: [{ $size: "$productStats" }, 0] },
+              {
+                $arrayElemAt: ["$productStats.count", 0]
+              },
+              0
+            ]
+          }
+        }
+      },
+      {
+        $set: {
+          distance: { $toDouble: '$distance' },
+        },
+      }
+    ];
     const shop = await Shop.aggregate(MQLBuilder);
 
     return shop;
