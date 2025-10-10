@@ -428,7 +428,7 @@ module.exports.getOrders = async (req, res) => {
       }, {
         '$match': {
           'latestStatus.status': req.params.status.toUpperCase() == 'CANCELLED' ? { $in: ['BUYER_CANCELED', 'SELLER_CANCELED'] } : req.params.status.toUpperCase(),
-          'invoice.status': { $ne: 'EXPIRED' },
+          // 'invoice.status': { $ne: 'EXPIRED' },
         }
       },
       { $sort: { 'orderId': -1 } }
@@ -736,5 +736,184 @@ module.exports.addDriverToLalamoveDetails = async (req, res) => {
       req,
       res
     );
+  }
+};
+
+module.exports.getOrderStatusTotals = async (req, res) => {
+  try {
+    const { start, end } = req.query;
+    const { role, _id, shop } = req.auth;
+
+    let filter = {};
+    let filterSeller = {};
+
+    if (role === "buyer") {
+      filter = { buyer: new mongoose.Types.ObjectId(_id) };
+    } else if (role === "seller") {
+      filter = { shops: { $in: [new mongoose.Types.ObjectId(shop?._id)] } };
+      filterSeller = { "cart.shopId": new mongoose.Types.ObjectId(shop?._id) };
+    }
+
+    const results = await Order.aggregate([
+      // 1️⃣ Filter by user role (buyer or seller)
+      //    - Buyers: match all their orders.
+      //    - Sellers: match only orders belonging to their shop.
+      { $match: filter },
+
+      // 2️⃣ Break the `cart` array into individual documents.
+      //    - Each element in `cart` becomes its own document.
+      { $unwind: "$cart" },
+
+      // 3️⃣ If user is a seller, filter again to keep only carts from their shop.
+      { $match: filterSeller },
+
+      // 4️⃣ Extract the latest status entry from each `cart.status` array.
+      //    - Sorts the statuses by `_id` descending (latest first).
+      //    - Takes only the first (latest) element.
+      {
+        $addFields: {
+          latestStatus: {
+            $arrayElemAt: [
+              {
+                $sortArray: {
+                  input: "$cart.status",
+                  sortBy: { _id: -1 }
+                }
+              },
+              0
+            ]
+          }
+        }
+      },
+
+      // 5️⃣ Keep only orders whose latest status date falls within the given date range.
+      {
+        $match: {
+          "latestStatus.date": {
+            $gte: new Date(start),
+            $lte: new Date(end)
+          }
+        }
+      },
+
+      // 6️⃣ Normalize inconsistent status values into a clean unified form.
+      //    - BUYER_CANCELED or SELLER_CANCELED → CANCELED
+      //    - READY_FOR_PICKUP → FOR_PICKUP (for consistency)
+      {
+        $addFields: {
+          normalizedStatus: {
+            $switch: {
+              branches: [
+                {
+                  case: {
+                    $in: ["$latestStatus.status", ["BUYER_CANCELED", "SELLER_CANCELED"]]
+                  },
+                  then: "CANCELED"
+                },
+                {
+                  case: { $eq: ["$latestStatus.status", "READY_FOR_PICKUP"] },
+                  then: "FOR_PICKUP"
+                }
+              ],
+              default: "$latestStatus.status"
+            }
+          }
+        }
+      },
+
+      // 7️⃣ Group the orders by normalized status and count how many fall into each.
+      {
+        $group: {
+          _id: "$normalizedStatus",
+          count: { $sum: 1 }
+        }
+      },
+
+      // 8️⃣ Use $facet to hold two data sets in parallel:
+      //    - "totals": all actual status counts found.
+      //    - "allStatuses": a static reference list of every possible status we care about.
+      {
+        $facet: {
+          totals: [
+            {
+              $group: {
+                _id: null,
+                totals: { $push: { k: "$_id", v: "$count" } }
+              }
+            }
+          ],
+          allStatuses: [
+            {
+              $project: {
+                statuses: [
+                  "TO_PAY",
+                  "FOR_REVIEW",
+                  "TO_PACK",
+                  "FOR_PICKUP",
+                  "TO_RECEIVE",
+                  "CANCELED"
+                ]
+              }
+            }
+          ]
+        }
+      },
+
+      // 9️⃣ Combine actual totals with the static status list.
+      //    - Ensures that missing statuses (not found in results) still appear with count = 0.
+      {
+        $project: {
+          merged: {
+            $map: {
+              input: { $arrayElemAt: ["$allStatuses.statuses", 0] },
+              as: "status",
+              in: {
+                status: "$$status",
+                count: {
+                  $ifNull: [
+                    {
+                      $first: {
+                        $filter: {
+                          input: { $arrayElemAt: ["$totals.totals", 0] },
+                          as: "item",
+                          cond: { $eq: ["$$item.k", "$$status"] }
+                        }
+                      }
+                    },
+                    { v: 0 } // default to 0 if not found
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+
+      // 🔟 Reshape the document so we only return a clean array of { status, count } pairs.
+      {
+        $project: {
+          _id: 0,
+          result: {
+            $map: {
+              input: "$merged",
+              as: "m",
+              in: { status: "$$m.status", count: "$$m.count.v" }
+            }
+          }
+        }
+      },
+
+      // 11️⃣ Flatten the result array — one document per status.
+      { $unwind: "$result" },
+
+      // 12️⃣ Replace the root document with each `result` object.
+      //      → Final output: { status: "TO_PAY", count: 5 }, etc.
+      { $replaceRoot: { newRoot: "$result" } }
+    ]);
+
+
+    return results;
+  } catch (error) {
+    padayon.ErrorHandler("Model::Order::getOrderStatusTotals", error, req, res);
   }
 };

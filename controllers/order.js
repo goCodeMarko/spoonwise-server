@@ -417,6 +417,30 @@ module.exports.getOrder = async (req, res) => {
   }
 };
 
+module.exports.getOrderStatusTotals = async (req, res) => {
+  try {
+    let response = { success: true, code: 201 };
+
+    req.body = {
+      start: req.query.start,
+      end: req.query.end
+    }
+
+    const result = await model.getOrderStatusTotals(req, res);
+
+
+    response.data = result;
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler(
+      "Controller::Order::getOrderStatusTotals",
+      error,
+      req,
+      res
+    );
+  }
+}
+
 module.exports.webhookLalamove = async (req, res) => {
   try {
     let response = { success: true, code: 200 };

@@ -115,5 +115,14 @@ router.get(
   })
 );
 
+router.get(
+  `/api/${base}/getOrderStatusTotals`,
+  execute(controller.getOrderStatusTotals, {
+    secured: true,
+    role: ["buyer", "seller"],
+    strict: { isallowedtocreate: true },
+  })
+);
+
 
 module.exports = router;
