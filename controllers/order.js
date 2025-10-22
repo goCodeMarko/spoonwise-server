@@ -74,7 +74,7 @@ module.exports.checkout = async (req, res) => {
           "description": "Test Invoice",
           "currency": "PHP",
           "reminderTime": 1,
-          "successRedirectUrl": 'https://spoonwise.space/profile'
+          "successRedirectUrl": 'http://localhost:4888/profile'
         }
       });
     }
@@ -123,7 +123,7 @@ module.exports.webhookXenditInvoice = async (req, res) => {
   try {
     let response = { success: true, code: 201 };
     const token = req.headers["x-callback-token"];
-
+    console.lgo('--------webhookXenditInvoice', req.body, token)
     if (token !== process.env.XENDIT_CALLBACK_TOKEN) throw new padayon.UnauthorizedException("Unauthorized");
 
     let result = await model.updateOrder(req, res);
