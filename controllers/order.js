@@ -123,8 +123,8 @@ module.exports.webhookXenditInvoice = async (req, res) => {
   try {
     let response = { success: true, code: 201 };
     const token = req.headers["x-callback-token"];
-    console.log('--------webhookXenditInvoice', req.body, token)
-    if (token !== process.env.XENDIT_CALLBACK_TOKEN) throw new padayon.UnauthorizedException("Unauthorized");
+    // console.log('--------webhookXenditInvoice', req.body, token)
+    // if (token !== process.env.XENDIT_CALLBACK_TOKEN) throw new padayon.UnauthorizedException("Unauthorized");
 
     let result = await model.updateOrder(req, res);
 
