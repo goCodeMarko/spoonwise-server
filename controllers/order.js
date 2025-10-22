@@ -74,7 +74,7 @@ module.exports.checkout = async (req, res) => {
           "description": "Test Invoice",
           "currency": "PHP",
           "reminderTime": 1,
-          "successRedirectUrl": 'http://localhost:4888/profile'
+          "successRedirectUrl": 'https://spoonwise.space/profile'
         }
       });
     }
