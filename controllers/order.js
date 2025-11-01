@@ -260,16 +260,20 @@ generateQuotation = async (req, res) => {
 
   if (!_.size(shop.data)) throw new padayon.BadRequestException("Shop Not Found");
 
+  const { address, barangay, municipality, province } = shop.data;
+  const { lng, lat } = shop.data.coordinates;
+
+
   const quotationPayload = SDKClient.QuotationPayloadBuilder.quotationPayload()
     .withLanguage("en_PH")
     .withServiceType("MOTORCYCLE")
     .withStops([
-      { coordinates: { lat: "" + shop.data[0].coordinates.lat, lng: "" + shop.data[0].coordinates.lng }, address: shop.data[0].address1 + " " + shop.data[0].address2 },
-      { coordinates: { lat: "" + req.auth.coordinates.lat, lng: "" + req.auth.coordinates.lng }, address: req.auth.address1 + " " + req.auth.address2 }
+      { coordinates: { lat: '' + lat, lng: '' + lng }, address: address + ', ' + barangay + ', ' + municipality + ', ' + province },
+      { coordinates: { lat: '' + req.auth?.coordinates?.lat, lng: '' + req.auth?.coordinates?.lng }, address: req.auth?.address + ', ' + req.auth?.barangay + ', ' + req.auth?.municipality + ', ' + req.auth?.province }
     ]).build();
 
   const quotation = await lalamoveClient.Quotation.create("PH", quotationPayload);
-  console.log('----------------quotation', quotation)
+
   return quotation;
 }
 
@@ -283,10 +287,11 @@ module.exports.lalamoveGetQuotation = async (req, res) => {
     let latestLalamoveOrder = {};
     let latestLalamoveDriver = {};
 
-    console.log('------------order', order)
+    req.params = { shopId: order.shopId };
     if (_.size(lalamove) == 0) {
       console.log('No Existing Lalamove order')
       lalamoveStatus = 'NONE';
+
       quotation = await generateQuotation(req, res);
     } else if (_.has(order, 'lalamove') && ((lalamove.status == 'EXPIRED') || (lalamove.status == 'CANCELED') || (lalamove.status == 'REJECTED'))) {
       console.log('It has lalamove object but need to push new qoutation')
@@ -327,27 +332,31 @@ module.exports.lalamoveGetQuotation = async (req, res) => {
 module.exports.lalamoveCreateOrder = async (req, res) => {
   try {
     let response = { success: true, code: 201 };
-    req.query.shopId = req.body.shopId;
-    req.query.orderId = req.body.orderId;
+    req.params.shopId = req.body.shopId;
+    req.query.orderId = req.body?.orderId;
+    req.query.shopId = req.body?.shopId;
+
     const order = await model.getOrder(req, res);
     const shop = await shopController.getShop(req, res);
+    console.log('-------------shop', shop)
+    console.log('-------------order', order)
 
     if (!_.size(shop.data)) throw new padayon.BadRequestException("Shop Not Found");
-    if (!_.size9 - (order)) throw new padayon.BadRequestException("Order Not Found");
+    if (!_.size(order)) throw new padayon.BadRequestException("Order Not Found");
 
     let remarks = 'Please pick-up the product(s): ';
     order[0].lineItems.forEach(lineitem => {
       remarks += ` [x${lineitem.orderQty} ${lineitem.name}]`
     })
     remarks += ` Thank you po!`
-
+    console.log('------req.auth', req.auth)
 
     const orderPayload = SDKClient.OrderPayloadBuilder.orderPayload()
       .withQuotationID(req.body.quotation.id)
       .withSender({
         stopId: req.body.quotation.stops[0].id,
-        name: shop.data[0].businessName,
-        phone: shop.data[0].phoneNumber,
+        name: shop.data?.businessName,
+        phone: '+63' + shop.data?.phoneNumber,
       })
       .withRecipients([
         {

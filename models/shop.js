@@ -580,11 +580,18 @@ module.exports.getShopList = async (req, res) => {
 
 module.exports.getShop = async (req, res) => {
   try {
-    const shopId = req.params.shopId || req.auth.shop._id;
+    console.log('=============== req.auth', req.auth)
+    console.log('=============== req.params', req.params.shopId)
+    console.log('=============== req.auth.coordinates.lat ', req.auth?.coordinates.lat)
+    console.log('=============== req.auth.coordinates.lng ', req.auth?.coordinates.lng)
+    console.log('=============== req.query.lat ', req.query?.lat)
+    console.log('=============== req.query.lng ', req.query?.lng)
+    const shopId = req.params?.shopId || req.auth?.shop?._id;
     const buyer = {
-      lat: req.query.lat ? Number(req.query.lat) : req.auth.coordinates.lat,
-      lng: req.query.lng ? Number(req.query.lng) : req.auth.coordinates.lng
+      lat: req.query?.lat ? Number(req.query.lat) : req.auth?.coordinates?.lat,
+      lng: req.query?.lng ? Number(req.query.lng) : req.auth?.coordinates?.lng
     }
+    console.log('---shopId', shopId)
 
     const MQLBuilder = [
       { $match: { _id: new mongoose.Types.ObjectId(shopId) } },

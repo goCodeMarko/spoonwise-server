@@ -36,8 +36,7 @@ const StoreSchema = new mongoose.Schema(
       lat: { type: Number, default: "" },
       lng: { type: Number, default: "" }
     },
-    address1: { type: String, default: "" },
-    address2: { type: String, default: "" },
+    address: { type: String, default: "" },
   }
 );
 
@@ -82,8 +81,7 @@ User = mongoose.model(
       url: { type: String, maxlength: 150 },
     },
     phoneNumber: { type: String },
-    address1: { type: String },
-    address2: { type: String },
+    address: { type: String },
     otp: {
       code: { type: String, required: false },
       isConsumed: { type: Boolean, default: false },
@@ -139,8 +137,7 @@ module.exports.getUser = async (req, res, callback) => {
           id_card: 1,
           barcode: 1,
           phoneNumber: 1,
-          address1: 1,
-          address2: 1,
+          address: 1,
           qrcode: 1,
           profile_picture: 1,
           company: 1,
@@ -207,8 +204,7 @@ module.exports.authenticate = async (req, res, callback) => {
           password: 1,
           profile_picture: 1,
           phoneNumber: 1,
-          address1: 1,
-          address2: 1,
+          address: 1,
           isblock: 1,
           company: 1,
           branch: 1,
@@ -736,8 +732,7 @@ module.exports.getUserAuth = async (req, res) => {
           password: 1,
           profile_picture: 1,
           phoneNumber: 1,
-          address1: 1,
-          address2: 1,
+          address: 1,
           isblock: 1,
           company: 1,
           branch: 1,
