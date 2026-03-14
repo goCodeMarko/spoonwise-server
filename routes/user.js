@@ -159,12 +159,6 @@ router.post(
   })
 ); //---------done
 
-router.put(
-  `/api/${base}/generateOTP`,
-  execute(controller.generateOTP, {
-    secured: false,
-  })
-); //---------done
 
 router.get(
   `/api/${base}/checkOTP`,
@@ -207,4 +201,16 @@ router.get(
     secured: true,
   })
 ); //---------done
+router.put(
+  `/api/${base}/rotateAccessToken`,
+  execute(controller.rotateAccessToken, {
+    secured: false,
+  })
+);
+router.put(
+  `/api/${base}/removeOldRefreshToken`,
+  execute(controller.removeOldRefreshToken, {
+    secured: true,
+  })
+);
 module.exports = router;

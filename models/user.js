@@ -40,6 +40,18 @@ const StoreSchema = new mongoose.Schema(
   }
 );
 
+const RefreshTokenSchema = new mongoose.Schema(
+  {
+    token: { type: String, required: true },
+    expiresAt: { type: Date, required: true },
+    createdAt: { type: Date, default: Date.now },
+    deviceInfo: {
+      device: { type: { type: String }, model: { type: String }, vendor: { type: String } },
+      os: { name: { type: String }, version: { type: String } },
+    },
+  }
+);
+
 User = mongoose.model(
   base,
   mongoose.Schema({
@@ -104,7 +116,9 @@ User = mongoose.model(
         lineItems: [LineItemSchema],
         shop: StoreSchema
       }
-    ]
+    ],
+    spoonwiseAI: { type: mongoose.Schema.Types.ObjectId },
+    refreshTokens: [RefreshTokenSchema],
   })
 );
 
@@ -167,7 +181,7 @@ module.exports.getBuyers = async (req, res) => {
   }
 };
 
-module.exports.authenticate = async (req, res, callback) => {
+module.exports.authenticate = async (req, res) => {
   try {
     let response = {};
     const email = req.body.email;
@@ -223,8 +237,8 @@ module.exports.authenticate = async (req, res, callback) => {
 
     }
 
-    response = account;
-    callback(response);
+    return account;
+
   } catch (error) {
     padayon.ErrorHandler("Model::User::authenticate", error, req, res);
   }
@@ -605,38 +619,49 @@ module.exports.generateOTP = async (req, res) => {
 
 
 
-module.exports.getUserOTPDetails = async (req, res) => {
+module.exports.getUserDetails = async (req, res) => {
   try {
     let response = {};
     const {
       userId
     } = req.fnParams;
-
-    const userx = await User.findById(userId, {
+    let shop = {};
+    const user = await User.findById(userId, {
       "otp.expiresAt": 1,
       "otp.isConsumed": 1,
       "otp.code": 1,
-      "firstname": 1,
-      "role": 1,
-      "shop": 1,
-      "email": 1,
-      _id: 0
+      email: 1,
+      role: 1,
+      shop: 1,
+      fullname: {
+        $concat: ["$firstname", " ", "$lastname"],
+      },
+      password: 1,
+      profile_picture: 1,
+      phoneNumber: 1,
+      address: 1,
+      isblock: 1,
+      company: 1,
+      branch: 1,
+      coordinates: 1,
+      cart: 1,
+      spoonwiseAI: 1
     });
-    let shop = {}
-    console.log('===userx', userx.role)
-    if (userx.role === 'seller') {
-      console.log('1')
-      shop = await User.findById(userId).populate({
-        path: 'shop',
-        select: 'businessName'
-      });
-      console.log('shop', shop)
+
+    console.log('-----------user', user)
+
+    if (user.role === 'seller') {
+
+      shop = await User.findById(userId)
+        .select('shop')
+        .populate('shop', 'businessName logo coordinates');
+
     }
 
-    response = { user: userx, shop };
+    response = { user: user, shop };
     return response;
   } catch (error) {
-    padayon.ErrorHandler("Model::User::getUserOTPDetails", error, req, res);
+    padayon.ErrorHandler("Model::User::getUserDetails", error, req, res);
   }
 };
 
@@ -815,3 +840,46 @@ module.exports.getSavedBlogs = async (req, res) => {
     padayon.ErrorHandler("Model::User::getSavedBlogs", error, req, res);
   }
 }
+
+module.exports.addRefreshToken = async (req, res) => {
+  try {
+    const { token, userId, expiresAt, deviceInfo } = req.fnParams;
+    const result = await User.updateOne(
+      { _id: userId },
+      {
+        $addToSet: {
+          refreshTokens: {
+            token: token,
+            expiresAt,
+            deviceInfo
+          }
+        }
+      }
+    );
+
+    return result;
+  } catch (error) {
+    padayon.ErrorHandler("Model::User::addRefreshToken", error, req, res);
+  }
+};
+
+
+module.exports.removeOldRefreshToken = async (req, res) => {
+  try {
+    const { old_refreshtoken, userId } = req.fnParams;
+    const result = await User.updateOne(
+      { _id: userId },
+      {
+        $pull: {
+          refreshTokens: {
+            token: old_refreshtoken
+          }
+        }
+      }
+    );
+
+    return result;
+  } catch (error) {
+    padayon.ErrorHandler("Model::User::removeOldRefreshToken", error, req, res);
+  }
+};

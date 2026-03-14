@@ -115,9 +115,16 @@
     return result;
   });
 
+    const allowedOrigins = [
+    "http://localhost:4888",
+  ];
+
   app
     .use(requestLogger)
-    .use(cors())
+  .use(require("cors")({
+      origin: allowedOrigins,
+      credentials: true
+    }))
     // .use(express.static(path.join(__dirname, clientFolder)))
     .use(bodyParser.json({ limit: "10mb" }))
     .use(bodyParser.urlencoded({ limit: '10mb', extended: true }))

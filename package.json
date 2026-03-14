@@ -46,6 +46,7 @@
     "puppeteer": "^22.8.1",
     "qrcode": "^1.5.1",
     "socket.io": "^4.7.5",
+    "ua-parser-js": "^2.0.9",
     "web-push": "^3.6.7",
     "xendit-node": "^6.3.0"
   },

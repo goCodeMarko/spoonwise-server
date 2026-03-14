@@ -22,10 +22,11 @@ module.exports.execute =
           req.auth = response.account;
           try {
             let data = await controller(req, res);
-
+            console.log('--------1')
             const code = data?.code ?? 200;
             const message = data ?? {};
-
+            console.log('--------2', code)
+            console.log('--------2', message)
             res.status(code).send(message);
           } catch (error) { }
         }
@@ -89,11 +90,14 @@ module.exports.security = async (req, res, options, callback) => {
     if (!_.has(options, "secured")) options.secured = true;
     if (options.secured) {
       const raw = _.split(req.headers["authorization"], " ");
-      const jwt_token = raw[1];
-      // const { jwt_token } = req.cookies;
-      if (!_.isEmpty(jwt_token)) {
-        let account = jwt.verify(jwt_token, process.env.JWT_PRIVATE_KEY);
+      // const accessToken = raw[1];
+      let { accessToken, refreshToken } = req.cookies;
 
+      console.log('----------accessToken', accessToken);
+
+      if (!_.isEmpty(accessToken)) {
+        let account = jwt.verify(accessToken, process.env.ACCESSTOKEN_PRIVATE_KEY);
+        console.log('-------account', account)
         response.account = account;
 
         if (_.has(options, "role") && !_.isEmpty(options.role)) {

@@ -22,6 +22,7 @@ bookController = require(`./../controllers/book`),
   blogModel = require('./../models/blog'),
   blogController = require('./blog'),
   moment = require("moment-timezone"),
+  uap = require('ua-parser-js'),
   { differenceInMinutes, differenceInSeconds } = require("date-fns"),
   cloudinary = require("./../services/cloudinary");
 
@@ -85,36 +86,24 @@ module.exports.getBuyers = async (req, res) => {
 
 module.exports.authenticate = async (req, res) => {
   try {
-    let response = { success: true, code: 200 };
-    await model.authenticate(req, res, (result) => {
-      //checks if credentials exists
-      if (_.size(result)) {
-        //checks if user account is blocked
-        if (result[0].isblock) {
-          response.success = false;
-          throw new padayon.ForbiddenException("Your account has been block");
-        } else {
-          //if not blocked then generate token
-          const token = jwt.sign(result[0], process.env.JWT_PRIVATE_KEY, {
-            expiresIn: "1d",
-          });
 
-          // set token as cookie
-          // res.cookie("jwt_token", token, {
-          //   httpOnly: true,
-          //   maxAge: 86400000,
-          // });
+    const account = await model.authenticate(req, res);
+    console.log('---account', account)
+    if (!_.size(account)) throw new padayon.UnauthorizedException("Invalid Credentials");
 
-          response.data = { token, account: result[0] };
-        }
-      } else {
-        //credentials does'nt exists
-        response.success = false;
-        response.code = 401;
-        throw new padayon.UnauthorizedException("Invalid Credentials");
-      }
-    });
-    return response;
+    //checks if user account is blocked
+    if (account[0].isblock) {
+      response.success = false;
+      throw new padayon.ForbiddenException("Your account has been block");
+    } else {
+      //if not blocked generate OTP
+      req.query = { userId: account[0]._id }
+      const generate_otp_res = await this.generateOTP(req, res);
+
+      return { success: generate_otp_res.success, account: account[0], status: generate_otp_res.status, expiresAt: generate_otp_res.expiresAt };
+    }
+
+
   } catch (error) {
     padayon.ErrorHandler("Controller::User::authenticate", error, req, res);
   }
@@ -131,43 +120,6 @@ module.exports.getUsers = async (req, res) => {
     padayon.ErrorHandler("Controller::User::getUsers", error, req, res);
   }
 };
-
-module.exports.authenticate = async (req, res) => {
-  try {
-    let response = { success: true, code: 200 };
-    await model.authenticate(req, res, (result) => {
-      //checks if credentials exists
-      if (_.size(result)) {
-        //checks if user account is blocked
-        if (result[0].isblock) {
-          response.success = false;
-          throw new padayon.ForbiddenException("Your account has been block");
-        } else {
-          //if not blocked then generate token
-          const token = jwt.sign(result[0], process.env.JWT_PRIVATE_KEY, {
-            expiresIn: "1d",
-          });
-
-          // set token as cookie
-          // res.cookie("jwt_token", token, {
-          //   httpOnly: true,
-          //   maxAge: 86400000,
-          // });
-
-          response.data = { token, account: result[0] };
-        }
-      } else {
-        //credentials does'nt exists
-        response.success = false;
-        response.code = 401;
-        throw new padayon.UnauthorizedException("Invalid Credentials");
-      }
-    });
-    return response;
-  } catch (error) {
-    padayon.ErrorHandler("Controller::User::authenticate", error, req, res);
-  }
-}; //---------done
 
 module.exports.googleRedirect = async (req, res) => {
   try {
@@ -617,8 +569,6 @@ module.exports.addToCart = async (req, res) => {
 
 module.exports.generateOTP = async (req, res) => {
   try {
-    let response = { success: true, code: 200 };
-
     const otp = padayon.generate4DigitCodeWithZeros();
     const now = new Date(); // current UTC
     const expiresAt = new Date(now.getTime() + 1 * 60000); // add 1 minute
@@ -629,36 +579,32 @@ module.exports.generateOTP = async (req, res) => {
       expiresAt
     }
 
-    const otpDetails = await model.getUserOTPDetails(req, res);
+    const userDetails = await model.getUserDetails(req, res);
 
     const currentOTP = {
-      isConsumed: otpDetails.user.otp.isConsumed,
-      expiresAt: differenceInSeconds(otpDetails.user.otp.expiresAt, now)
+      isConsumed: userDetails.user.otp.isConsumed,
+      expiresAt: differenceInSeconds(userDetails.user.otp.expiresAt, now)
     }
-
-    if (currentOTP.expiresAt > 0 && !currentOTP.isConsumed) {
-      throw new padayon.BadRequestException(
-        "A valid OTP already exists. Please use the existing OTP or wait for it to expire before requesting a new one.",
-        { errorType: 'OTP_NOT_EXPIRED', expiresAt: currentOTP.expiresAt }
-      );
-    }
-
-    const result = await model.generateOTP(req, res);
-    const localTime = moment.utc(result.expiresAt).tz(req.timezone);
-    console.log('=========otpDetails', otpDetails.user)
-    // emailer
-    //otpDetails.user.email
-    email.notify('dulacamen27@gmail.com', "otp_template", {
-      header: `Your One-Time Password`,
-      banner: "spoonwise-logo-full",
-      name: otpDetails.user.role === 'seller' ? otpDetails.shop.shop.businessName : otpDetails.user.firstname,
-      otp: otp,
-    })
-
+    console.log('------currentOTP', currentOTP)
     const seconds = differenceInSeconds(expiresAt, now);
+    if (currentOTP.expiresAt > 0 && !currentOTP.isConsumed) {
+      return { success: false, expiresAt: currentOTP.expiresAt, status: 'OTP_NOT_EXPIRED', status_msg: 'A valid OTP already exists. Please use the existing OTP or wait for it to expire before requesting a new one."' };
 
-    response.data = { expiresAt: seconds };
-    return response;
+    } else {
+      const result = await model.generateOTP(req, res);
+      const localTime = moment.utc(result.expiresAt).tz(req.timezone);
+
+      /*
+      email.notify(userDetails.user.email, "otp_template", {
+        header: `Your One-Time Password`,
+        banner: "spoonwise-logo-full",
+        name: userDetails.user.role === 'seller' ? userDetails.shop.shop.businessName : otpDetails.user.firstname,
+        otp: otp,
+      })
+      */
+
+      return { success: true, expiresAt: seconds, status: 'OTP_SUCCESS' };
+    }
   } catch (error) {
     padayon.ErrorHandler("Controller::User::generateOTP", error, req, res);
   }
@@ -672,36 +618,165 @@ module.exports.checkOTP = async (req, res) => {
       ...req.query
     }
 
-    const otpDetails = await model.getUserOTPDetails(req, res);
+    const userDetails = await model.getUserDetails(req, res);
+    console.log('---------userDetail', userDetails)
     const currentOTP = {
-      isConsumed: otpDetails.user.otp.isConsumed,
-      code: otpDetails.user.otp.code,
-      expiresAt: differenceInSeconds(otpDetails.user.otp.expiresAt, now)
+      isConsumed: userDetails.user.otp.isConsumed,
+      code: userDetails.user.otp.code,
+      expiresAt: differenceInSeconds(userDetails.user.otp.expiresAt, now)
+    }
+
+    const account = {
+      _id: userDetails.user._id,
+      email: userDetails.user.email,
+      role: userDetails.user.role,
+      shop: userDetails.shop.shop,
+      fullname: userDetails.user.fullname,
+      password: userDetails.user.password,
+      profile_picture: userDetails.user.profile_picture,
+      phoneNumber: userDetails.user.phoneNumber,
+      address: userDetails.user.address,
+      isblock: userDetails.user.isblock,
+      company: userDetails.user.company,
+      branch: userDetails.user.branch,
+      coordinates: userDetails.user.coordinates,
+      cart: userDetails.user.cart,
+      spoonwiseAI: userDetails.user.spoonwiseAI
     }
 
     // if (currentOTP.expiresAt <= 0) {
     //   throw new padayon.BadRequestException(
     //     "OTP has expired.",
-    //     { errorType: 'OTP_EXPIRED' }
+    //     { status: 'OTP_EXPIRED' }
     //   );
     // } else if (currentOTP.isConsumed) {
     //   throw new padayon.BadRequestException(
     //     "OTP already used.",
-    //     { errorType: 'OTP_CONSUMED' }
+    //     { status: 'OTP_CONSUMED' }
     //   );
     // } else if (currentOTP.code !== req.fnParams.otp) {
     //   throw new padayon.BadRequestException(
     //     "Incorrect OTP.",
-    //     { errorType: 'OTP_INCORRECT' }
+    //     { status: 'OTP_INCORRECT' }
     //   );
     // } else if (currentOTP.code === req.fnParams.otp) {
     await model.consumedOTP(req, res);
-    response.data = { message: 'OTP_SUCCESS' };
+
+    const accessToken = jwt.sign(account, process.env.ACCESSTOKEN_PRIVATE_KEY, {
+      expiresIn: "12h",
+    });
+
+    const refreshToken = jwt.sign(account, process.env.REFRESHTOKEN_PRIVATE_KEY, {
+      expiresIn: "7d",
+    });
+
+    const ua = uap(req.headers['user-agent']);
+    req.fnParams = {
+      token: refreshToken,
+      userId: account._id,
+      expiresAt: moment().add(7, 'days').toDate(),
+      deviceInfo: {
+        device: ua.device,
+        os: ua.os,
+      }
+    }
+
+    await model.addRefreshToken(req, res);
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: false,        // important in production must true (HTTPS only)
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000 // 15 minutes = 900,000 ms
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days = 604,800,000 ms
+    });
+
+    console.log('accessToken', accessToken)
+
+    response.data = { status: 'OTP_CORRECT', account };
     // }
 
     return response;
   } catch (error) {
     padayon.ErrorHandler("Controller::User::checkOTP", error, req, res);
+  }
+};
+
+module.exports.rotateAccessToken = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+    const old_refresh_token = req.cookies.refreshToken;
+    const { iat, exp, ...oldData } = jwt.verify(old_refresh_token, process.env.REFRESHTOKEN_PRIVATE_KEY);
+
+    const accessToken = jwt.sign(oldData, process.env.ACCESSTOKEN_PRIVATE_KEY, {
+      expiresIn: "12h",
+    });
+
+    const refreshToken = jwt.sign(oldData, process.env.REFRESHTOKEN_PRIVATE_KEY, {
+      expiresIn: "7d",
+    });
+
+    const ua = uap(req.headers['user-agent']);
+
+    req.fnParams = {
+      old_refreshtoken: old_refresh_token,
+      token: refreshToken,
+      userId: oldData._id,
+      expiresAt: moment().add(7, 'days').toDate(),
+      deviceInfo: {
+        device: ua.device,
+        os: ua.os,
+      }
+    }
+    console.log('xxxxxxxxxxxxx-5')
+    await model.removeOldRefreshToken(req, res);
+    await model.addRefreshToken(req, res);
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: false,        // important in production must true (HTTPS only)
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000 // 15 minutes = 900,000 ms
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days = 604,800,000 ms
+    });
+
+    response.data = { status: 'ACCESS_TOKEN_ROTATION_SUCCESS' };
+    // }
+
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Controller::User::rotateAccessToken", error, req, res);
+  }
+};
+
+module.exports.removeOldRefreshToken = async (req, res) => {
+  try {
+    let response = { success: true, code: 200 };
+
+    req.fnParams = {
+      userId: req.auth?._id,
+      old_refreshtoken: req.cookies.refreshToken
+    }
+
+    await model.removeOldRefreshToken(req, res);
+
+    response.data = { status: 'REFRESH_TOKEN_REMOVAL_SUCCESS' };
+
+    return response;
+  } catch (error) {
+    padayon.ErrorHandler("Controller::User::removeOldRefreshToken", error, req, res);
   }
 };
 
