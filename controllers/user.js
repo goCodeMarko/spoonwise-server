@@ -17,6 +17,7 @@ bookController = require(`./../controllers/book`),
   _ = require("lodash"),
   { userAccessDTO, userDTO, addUserDTO, addPartialShopDTO, updateBuyerLocationDTO } = require("../services/dto"),
   email = require("./../services/email"),
+  sendgrid = require("./../services/sendgrid_emailer"),
   id_card = require("./../services/id_card"),
   Product = require('./product'),
   blogModel = require('./../models/blog'),
@@ -598,10 +599,17 @@ module.exports.generateOTP = async (req, res) => {
       email.notify(userDetails.user.email, "otp_template", {
         header: `Your One-Time Password`,
         banner: "spoonwise-logo-full",
-        name: userDetails.user.role === 'seller' ? userDetails.shop.shop.businessName : otpDetails.user.firstname,
+        name: userDetails.user.role === 'seller' ? userDetails.shop.shop.businessName : userDetails.user.firstname,
         otp: otp,
       })
       */
+
+      const name = userDetails.user?.role === 'seller' ? userDetails.shop?.shop?.businessName : userDetails.user?.firstname;
+      console.log('---------------email', userDetails.user?.email)
+      sendgrid.notify(userDetails.user?.email, {
+        name,
+        code: otp,
+      })
 
       return { success: true, expiresAt: seconds, status: 'OTP_SUCCESS' };
     }
@@ -644,63 +652,64 @@ module.exports.checkOTP = async (req, res) => {
       spoonwiseAI: userDetails.user.spoonwiseAI
     }
 
-    // if (currentOTP.expiresAt <= 0) {
-    //   throw new padayon.BadRequestException(
-    //     "OTP has expired.",
-    //     { status: 'OTP_EXPIRED' }
-    //   );
-    // } else if (currentOTP.isConsumed) {
-    //   throw new padayon.BadRequestException(
-    //     "OTP already used.",
-    //     { status: 'OTP_CONSUMED' }
-    //   );
-    // } else if (currentOTP.code !== req.fnParams.otp) {
-    //   throw new padayon.BadRequestException(
-    //     "Incorrect OTP.",
-    //     { status: 'OTP_INCORRECT' }
-    //   );
-    // } else if (currentOTP.code === req.fnParams.otp) {
-    await model.consumedOTP(req, res);
+    if (currentOTP.expiresAt <= 0) {
+      throw new padayon.BadRequestException(
+        "OTP has expired.",
+        { status: 'OTP_EXPIRED' }
+      );
+    } else if (currentOTP.isConsumed) {
+      throw new padayon.BadRequestException(
+        "OTP already used.",
+        { status: 'OTP_CONSUMED' }
+      );
+    } else if (currentOTP.code !== req.fnParams.otp) {
+      throw new padayon.BadRequestException(
+        "Incorrect OTP.",
+        { status: 'OTP_INCORRECT' }
+      );
+    } else if (currentOTP.code === req.fnParams.otp) {
+      await model.consumedOTP(req, res);
 
-    const accessToken = jwt.sign(account, process.env.ACCESSTOKEN_PRIVATE_KEY, {
-      expiresIn: "12h",
-    });
 
-    const refreshToken = jwt.sign(account, process.env.REFRESHTOKEN_PRIVATE_KEY, {
-      expiresIn: "7d",
-    });
+      const accessToken = jwt.sign(account, process.env.ACCESSTOKEN_PRIVATE_KEY, {
+        expiresIn: "12h",
+      });
 
-    const ua = uap(req.headers['user-agent']);
-    req.fnParams = {
-      token: refreshToken,
-      userId: account._id,
-      expiresAt: moment().add(7, 'days').toDate(),
-      deviceInfo: {
-        device: ua.device,
-        os: ua.os,
+      const refreshToken = jwt.sign(account, process.env.REFRESHTOKEN_PRIVATE_KEY, {
+        expiresIn: "7d",
+      });
+
+      const ua = uap(req.headers['user-agent']);
+      req.fnParams = {
+        token: refreshToken,
+        userId: account._id,
+        expiresAt: moment().add(7, 'days').toDate(),
+        deviceInfo: {
+          device: ua.device,
+          os: ua.os,
+        }
       }
+
+      await model.addRefreshToken(req, res);
+
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: false,        // important in production must true (HTTPS only)
+        sameSite: "strict",
+        maxAge: 15 * 60 * 1000 // 15 minutes = 900,000 ms
+      });
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days = 604,800,000 ms
+      });
+
+      console.log('accessToken', accessToken)
+
+      response.data = { status: 'OTP_CORRECT', account };
     }
-
-    await model.addRefreshToken(req, res);
-
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: false,        // important in production must true (HTTPS only)
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000 // 15 minutes = 900,000 ms
-    });
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days = 604,800,000 ms
-    });
-
-    console.log('accessToken', accessToken)
-
-    response.data = { status: 'OTP_CORRECT', account };
-    // }
 
     return response;
   } catch (error) {

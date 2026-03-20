@@ -1,6 +1,7 @@
 const
     padayon = require("./padayon"),
     OpenAI = require("openai"),
+    _ = require("lodash"),
     server = require('../server'),
     messageController = require('./../controllers/message'),
     openai = new OpenAI({
@@ -25,7 +26,7 @@ module.exports.generateChatResponse = async (req, res) => {
                 imageURL
             });
 
-            this.processWithOpenAI(req, res)
+            await this.processWithOpenAI(req, res)
         } else {
             if (!prompt) throw new padayon.BadRequestException("Missing prompt. Please provide a prompt for Spoonwise AI.");
 
@@ -34,7 +35,7 @@ module.exports.generateChatResponse = async (req, res) => {
                 index: 0,
                 prompt
             });
-            this.processWithOpenAI(req, res)
+            await this.processWithOpenAI(req, res)
         }
     } catch (error) {
         padayon.ErrorHandler(
@@ -50,15 +51,14 @@ module.exports.processWithOpenAI = async (req, res) => {
     try {
         const directory = "Services::OpenAI::invokeAI"
         const language = req.chatroom.settings.language;
-        const pastMessages = req.chatroom.latestMessages.map(data => {
-            return {
-                role: data.isAIAgent ? "assistant" : "user",
-                content: {
-                    message: data.message,
-                    attachments: data.attachments
-                }
-            }
-        }).slice(0, 4);
+        const pastMessagesText = (req.chatroom.latestMessages || [])
+            .slice(0, 4)
+            .map((data) => {
+                const role = data.isAIAgent ? "assistant" : "user";
+                const message = data.content?.message || "";
+                return `${role}: ${message}`;
+            })
+            .join('\n');
 
         const prompts = [
             [{
@@ -95,7 +95,7 @@ module.exports.processWithOpenAI = async (req, res) => {
 
         
         Here is the previous conversation for context:
-        ${pastMessages.join('\n')}
+        ${pastMessagesText}
         `},
             {
                 role: "user",
@@ -144,7 +144,7 @@ module.exports.processWithOpenAI = async (req, res) => {
             - Always use new line when needed.
 
             Here is the previous conversation for context:
-            ${pastMessages.join('\n')}
+            ${pastMessagesText}
             `
             },
 
@@ -269,4 +269,3 @@ module.exports.processWithOpenAI = async (req, res) => {
     });
     */
 }
-

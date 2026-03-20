@@ -626,36 +626,44 @@ module.exports.getUserDetails = async (req, res) => {
       userId
     } = req.fnParams;
     let shop = {};
-    const user = await User.findById(userId, {
-      "otp.expiresAt": 1,
-      "otp.isConsumed": 1,
-      "otp.code": 1,
-      email: 1,
-      role: 1,
-      shop: 1,
-      fullname: {
-        $concat: ["$firstname", " ", "$lastname"],
+
+    const [user] = await User.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(userId),
+        },
       },
-      password: 1,
-      profile_picture: 1,
-      phoneNumber: 1,
-      address: 1,
-      isblock: 1,
-      company: 1,
-      branch: 1,
-      coordinates: 1,
-      cart: 1,
-      spoonwiseAI: 1
-    });
+      {
+        $project: {
+          email: 1,
+          role: 1,
+          shop: 1,
+          fullname: {
+            $concat: ["$firstname", " ", "$lastname"],
+          },
+          firstname: 1,
+          lastname: 1,
+          password: 1,
+          profile_picture: 1,
+          phoneNumber: 1,
+          address: 1,
+          isblock: 1,
+          company: 1,
+          branch: 1,
+          coordinates: 1,
+          cart: 1,
+          spoonwiseAI: 1,
+          otp: 1
+        },
+      },
+    ]);
 
     console.log('-----------user', user)
 
-    if (user.role === 'seller') {
-
+    if (user && user.role === 'seller') {
       shop = await User.findById(userId)
         .select('shop')
         .populate('shop', 'businessName logo coordinates');
-
     }
 
     response = { user: user, shop };

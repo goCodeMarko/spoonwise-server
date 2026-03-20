@@ -178,6 +178,7 @@ module.exports.getPastChatrooms = async (req, res) => {
                             $project: {
                                 _id: 1,
                                 senderId: 1,
+                                isAIAgent: 1,
                                 content: {
                                     message: 1,
                                     order: "$order",
@@ -964,4 +965,3 @@ module.exports.createChatroom = async (req, res) => {
         );
     }
 }
-

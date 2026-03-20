@@ -139,8 +139,17 @@ module.exports.sendMessage = async (req, res) => {
             if (!req.noEmitOnNewChatMessage) server.io.to(receiverId).emit('onNewChatMessage', { message: sendMessage, chatroom });
         }
         else if (chatroom.isAIAgent && !req.fnParams.isAIAgent) { // If it's an AI chatroom and the message is from the user
-            req.chatroom = chatroom
-            openai.generateChatResponse(req, res); // Generate a response from the AI agent
+            // Use a shallow, per-request snapshot so AI processing doesn't mutate the original req
+            const aiReq = {
+                params: { chatroomId: req.params.chatroomId },
+                query: { ...req.query },
+                body: _.cloneDeep(req.body),
+                auth: req.auth,
+                chatroom,
+                file: req.file,
+                noEmitOnNewChatMessage: req.noEmitOnNewChatMessage
+            };
+            openai.generateChatResponse(aiReq, res); // Generate a response from the AI agent
         }
 
         response.data = { ...sendMessage?._doc, isAIAgent: chatroom.isAIAgent };
