@@ -123,6 +123,8 @@
 
   const allowedOriginRegex = /^https:\/\/([a-z0-9-]+\.)*spoonwise\.space(?::\d+)?$/i;
 
+  const enableAppCors = process.env.ENABLE_APP_CORS !== "false" && process.env.NODE_ENV !== "prod";
+
   const corsOptions = {
     origin: function (origin, callback) {
       // allow requests with no origin (like mobile apps, curl, postman)
@@ -134,28 +136,14 @@
       return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
-
-
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Timezone", "X-Timezone", "x-timezone", "X-Socket-Id", "x-socket-id"],
   };
 
   app
     .use(requestLogger)
-    .use((req, res, next) => {
-      const origin = req.headers.origin;
-      if (origin && (allowedOrigins.has(origin) || allowedOriginRegex.test(origin))) {
-        res.setHeader("Access-Control-Allow-Origin", origin);
-        res.setHeader("Vary", "Origin");
-        res.setHeader("Access-Control-Allow-Credentials", "true");
-        res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
-        res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Timezone, X-Timezone, x-timezone, X-Socket-Id, x-socket-id");
-      }
-      if (req.method === "OPTIONS") {
-        return res.sendStatus(204);
-      }
-      return next();
-    })
-    .use(require("cors")(corsOptions))
-    .options("*", require("cors")(corsOptions))
+    .use(enableAppCors ? require("cors")(corsOptions) : (req, _res, next) => next())
+    .options("*", enableAppCors ? require("cors")(corsOptions) : (req, res) => res.sendStatus(204))
     // .use(express.static(path.join(__dirname, clientFolder)))
     .use(bodyParser.json({ limit: "10mb" }))
     .use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
