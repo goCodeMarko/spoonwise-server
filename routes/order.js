@@ -16,7 +16,7 @@ router.post(
   })
 ); //---------done
 
-if (process.env.name === 'main-app' || process.env.CLUSTER_MODE === 'NO') {
+if (process.env.name === 'app-uat-1' || process.env.CLUSTER_MODE === 'NO') {
   router.post(
     `/api/${base}/webhook/xendit/invoice`,
     execute(controller.webhookXenditInvoice, {
@@ -52,7 +52,7 @@ router.post(
   })
 ); //---------done
 
-if (process.env.name === 'main-app' || process.env.CLUSTER_MODE === 'NO') {
+if (process.env.name === 'app-uat-1' || process.env.CLUSTER_MODE === 'NO') {
   router.post(
     `/api/${base}/webhook/lalamove`,
     execute(controller.webhookLalamove, {

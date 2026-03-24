@@ -34,7 +34,7 @@
 
   Init.Mongoose();
 
-  if (process.env.name === 'main-app' || process.env.CLUSTER_MODE === 'NO') {
+  if (process.env.name === 'app-uat-1' || process.env.CLUSTER_MODE === 'NO') {
     // Init.CronJobs();
     console.log('Process Environment: ', process.env)
 
@@ -115,13 +115,13 @@
     return result;
   });
 
-    const allowedOrigins = [
+  const allowedOrigins = [
     "http://localhost:4888",
   ];
 
   app
     .use(requestLogger)
-  .use(require("cors")({
+    .use(require("cors")({
       origin: allowedOrigins,
       credentials: true
     }))
@@ -154,7 +154,7 @@
     });
 
   server.listen(config.server.port, () => {
-    if (process.env.name === 'main-app' || process.env.CLUSTER_MODE === 'NO') {
+    if (process.env.name === 'app-uat-1' || process.env.CLUSTER_MODE === 'NO') {
       console.log("\x1b[36m", title);
     }
     console.log(

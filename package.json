@@ -5,7 +5,7 @@
     "node": "20.11.0"
   },
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "dependencies": {
     "@aivangogh/ph-address": "^1.4.2",
     "@lalamove/lalamove-js": "^1.1.0",
