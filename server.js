@@ -117,6 +117,7 @@
 
   const allowedOrigins = [
     "http://localhost:4888",
+    "https://spoonwise.space"
   ];
 
   app
