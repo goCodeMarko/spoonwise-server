@@ -115,26 +115,33 @@
     return result;
   });
 
-  const allowedOrigins = [
+  const allowedOrigins = new Set([
     "http://localhost:4888",
-    "https://spoonwise.space"
-  ];
+    "https://spoonwise.space",
+    "https://www.spoonwise.space"
+  ]);
+
+  const allowedOriginRegex = /^https:\/\/([a-z0-9-]+\.)*spoonwise\.space(?::\d+)?$/i;
+
+  const corsOptions = {
+    origin: function (origin, callback) {
+      // allow requests with no origin (like mobile apps, curl, postman)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.has(origin) || allowedOriginRegex.test(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Timezone"],
+  };
 
   app
     .use(requestLogger)
-    .use(require("cors")({
-      origin: function (origin, callback) {
-        // allow requests with no origin (like mobile apps, curl, postman)
-        if (!origin) return callback(null, true);
-
-        if (allowedOrigins.includes(origin)) {
-          return callback(null, true);
-        } else {
-          return callback(new Error("Not allowed by CORS"));
-        }
-      },
-      credentials: true
-    }))
+    .use(require("cors")(corsOptions))
+    .options("*", require("cors")(corsOptions))
     // .use(express.static(path.join(__dirname, clientFolder)))
     .use(bodyParser.json({ limit: "10mb" }))
     .use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
