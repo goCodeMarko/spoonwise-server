@@ -694,14 +694,14 @@ module.exports.checkOTP = async (req, res) => {
 
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: false,        // important in production must true (HTTPS only)
+        secure: true,        // important in production must true (HTTPS only)
         sameSite: "strict",
         maxAge: 15 * 60 * 1000 // 15 minutes = 900,000 ms
       });
 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: false,
+        secure: true,
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days = 604,800,000 ms
       });
@@ -749,14 +749,14 @@ module.exports.rotateAccessToken = async (req, res) => {
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: false,        // important in production must true (HTTPS only)
+      secure: true,        // important in production must true (HTTPS only)
       sameSite: "strict",
       maxAge: 15 * 60 * 1000 // 15 minutes = 900,000 ms
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days = 604,800,000 ms
     });
