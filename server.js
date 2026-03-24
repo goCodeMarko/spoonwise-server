@@ -135,7 +135,7 @@
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", " X-Timezone"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Timezone", "X-Timezone", "x-timezone"],
   };
 
   app
@@ -147,7 +147,7 @@
         res.setHeader("Vary", "Origin");
         res.setHeader("Access-Control-Allow-Credentials", "true");
         res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
-        res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Timezone");
+        res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Timezone, X-Timezone, x-timezone");
       }
       if (req.method === "OPTIONS") {
         return res.sendStatus(204);
