@@ -123,7 +123,16 @@
   app
     .use(requestLogger)
     .use(require("cors")({
-      origin: allowedOrigins,
+      origin: function (origin, callback) {
+        // allow requests with no origin (like mobile apps, curl, postman)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin)) {
+          return callback(null, true);
+        } else {
+          return callback(new Error("Not allowed by CORS"));
+        }
+      },
       credentials: true
     }))
     // .use(express.static(path.join(__dirname, clientFolder)))
