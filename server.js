@@ -50,10 +50,10 @@
     console.log('--------------webpush', webpush)
 
     module.exports.io = require("socket.io")(server, {
-      cors: {
-        origin: "*",
-        methods: ["GET", "POST"],
-      },
+      // cors: {
+      //   origin: "*",
+      //   methods: ["GET", "POST"],
+      // },
     });
 
 
