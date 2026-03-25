@@ -123,7 +123,7 @@
 
   const allowedOriginRegex = /^https:\/\/([a-z0-9-]+\.)*spoonwise\.space(?::\d+)?$/i;
 
-  const enableAppCors = process.env.ENABLE_APP_CORS !== "false" && process.env.NODE_ENV !== "prod";
+  const enableAppCors = process.env.ENABLE_APP_CORS !== "false";
 
   const corsOptions = {
     origin: function (origin, callback) {
