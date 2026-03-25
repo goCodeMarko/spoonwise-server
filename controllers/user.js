@@ -697,6 +697,7 @@ module.exports.checkOTP = async (req, res) => {
         secure: true,        // important in production must true (HTTPS only)
         sameSite: "strict",
         domain: ".spoonwise.space",
+        path: "/",
         maxAge: 15 * 60 * 1000 // 15 minutes = 900,000 ms
       });
 
@@ -705,6 +706,7 @@ module.exports.checkOTP = async (req, res) => {
         secure: true,
         sameSite: "strict",
         domain: ".spoonwise.space",
+        path: "/",
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days = 604,800,000 ms
       });
 
@@ -754,6 +756,7 @@ module.exports.rotateAccessToken = async (req, res) => {
       secure: true,        // important in production must true (HTTPS only)
       sameSite: "strict",
       domain: ".spoonwise.space",
+      path: "/",
       maxAge: 15 * 60 * 1000 // 15 minutes = 900,000 ms
     });
 
@@ -762,6 +765,7 @@ module.exports.rotateAccessToken = async (req, res) => {
       secure: true,
       sameSite: "strict",
       domain: ".spoonwise.space",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days = 604,800,000 ms
     });
 
