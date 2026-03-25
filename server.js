@@ -142,8 +142,8 @@
 
   app
     .use(requestLogger)
-    .use(enableAppCors ? require("cors")(corsOptions) : (req, _res, next) => next())
-    .options("*", enableAppCors ? require("cors")(corsOptions) : (req, res) => res.sendStatus(204))
+    // .use(enableAppCors ? require("cors")(corsOptions) : (req, _res, next) => next())
+    // .options("*", enableAppCors ? require("cors")(corsOptions) : (req, res) => res.sendStatus(204))
     // .use(express.static(path.join(__dirname, clientFolder)))
     .use(bodyParser.json({ limit: "10mb" }))
     .use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
