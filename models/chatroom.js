@@ -965,3 +965,31 @@ module.exports.createChatroom = async (req, res) => {
         );
     }
 }
+
+module.exports.createSpoonwiseAIChatroom = async (req, res) => {
+    try {
+        const { userId, shopId } = req.fnParams;
+        if (!userId) {
+            throw new padayon.BadRequestException("Missing userId.");
+        }
+
+        const body = {
+            settings: {
+                language: "TAGALOG"
+            },
+            isAIAgent: true
+        };
+
+        const chatroom = new Chatroom(body);
+        const result = await chatroom.save();
+
+        return result;
+    } catch (error) {
+        padayon.ErrorHandler(
+            "Model::Chatroom::createSpoonwiseAIChatroom",
+            error,
+            req,
+            res
+        );
+    }
+};

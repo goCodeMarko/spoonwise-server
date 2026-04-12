@@ -4,8 +4,9 @@ const padayon = require("../services/padayon"),
   path = require("path"),
   base = path.basename(__filename, ".js"),
   model = require(`./../models/${base}`),
-  shopModel = require(`./../models/shop`)
-bookController = require(`./../controllers/book`),
+  shopModel = require(`./../models/shop`),
+  chatroomModel = require("./../models/chatroom"),
+  bookController = require(`./../controllers/book`),
   bcrypt = require("bcrypt"),
   jwt = require("jsonwebtoken"),
   qrcode = require("./../services/qrcode"),
@@ -523,6 +524,22 @@ module.exports.addUser = async (req, res) => {
     req.shop = shop
     user = await model.addUser(req, res);
 
+    if (user && user.role !== 'admin') {
+      req.fnParams = {
+        userId: user._id,
+        shopId: user.shop
+      };
+      const spoonwiseAIChatroom = await chatroomModel.createSpoonwiseAIChatroom(req, res);
+
+      if (spoonwiseAIChatroom?._id) {
+        req.fnParams = {
+          userId: user._id,
+          spoonwiseAI: spoonwiseAIChatroom._id
+        };
+        const updatedUser = await model.setSpoonwiseAIChatroom(req, res);
+        if (updatedUser) user = updatedUser;
+      }
+    }
 
     response.data = { shop, user }
 

@@ -390,6 +390,25 @@ module.exports.addUser = async (req, res) => {
   }
 }; //---------done
 
+module.exports.setSpoonwiseAIChatroom = async (req, res) => {
+  try {
+    const { userId, spoonwiseAI } = req.fnParams;
+    if (!userId || !spoonwiseAI) {
+      throw new padayon.BadRequestException("Missing userId or spoonwiseAI.");
+    }
+
+    const result = await User.findOneAndUpdate(
+      { _id: new mongoose.Types.ObjectId(userId) },
+      { $set: { spoonwiseAI: new mongoose.Types.ObjectId(spoonwiseAI) } },
+      { new: true }
+    );
+
+    return result;
+  } catch (error) {
+    padayon.ErrorHandler("Model::User::setSpoonwiseAIChatroom", error, req, res);
+  }
+};
+
 
 module.exports.getCart = async (req, res) => {
   try {
