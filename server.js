@@ -34,6 +34,43 @@
 
   Init.Mongoose();
 
+  const allowedOrigins = new Set([
+    "http://localhost:4888",
+    "https://spoonwise.space",
+    "https://www.spoonwise.space"
+  ]);
+
+  const allowedOriginRegex = /^https:\/\/([a-z0-9-]+\.)*spoonwise\.space(?::\d+)?$/i;
+  const localOriginRegex = /^http:\/\/(localhost|127\.0\.0\.1)(?::\d+)?$/i;
+
+  const enableAppCors = process.env.ENABLE_APP_CORS !== "false";
+
+  const corsOptions = {
+    origin: function (origin, callback) {
+      // allow requests with no origin (like mobile apps, curl, postman)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.has(origin) || allowedOriginRegex.test(origin) || localOriginRegex.test(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Timezone", "X-Timezone", "x-timezone", "X-Socket-Id", "x-socket-id"],
+  };
+
+  const socketCorsOptions = enableAppCors
+    ? corsOptions
+    : {
+      origin: function (_origin, callback) {
+        return callback(null, true);
+      },
+      credentials: true,
+      methods: corsOptions.methods,
+      allowedHeaders: corsOptions.allowedHeaders,
+    };
+
   if (process.env.name === 'app-uat-1' || process.env.CLUSTER_MODE === 'NO') {
     // Init.CronJobs();
     console.log('Process Environment: ', process.env)
@@ -50,10 +87,7 @@
     console.log('--------------webpush', webpush)
 
     module.exports.io = require("socket.io")(server, {
-      // cors: {
-      //   origin: "*",
-      //   methods: ["GET", "POST"],
-      // },
+      cors: socketCorsOptions,
     });
 
 
@@ -115,38 +149,13 @@
     return result;
   });
 
-  const allowedOrigins = new Set([
-    "http://localhost:4888",
-    "https://spoonwise.space",
-    "https://www.spoonwise.space"
-  ]);
-
-  const allowedOriginRegex = /^https:\/\/([a-z0-9-]+\.)*spoonwise\.space(?::\d+)?$/i;
-
-  const enableAppCors = process.env.ENABLE_APP_CORS !== "false";
-
-  const corsOptions = {
-    origin: function (origin, callback) {
-      // allow requests with no origin (like mobile apps, curl, postman)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.has(origin) || allowedOriginRegex.test(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error("Not allowed by CORS"));
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Timezone", "X-Timezone", "x-timezone", "X-Socket-Id", "x-socket-id"],
-  };
-
   app
     .use(requestLogger)
-    // .use(enableAppCors ? require("cors")(corsOptions) : (req, _res, next) => next())
-    // .options("*", enableAppCors ? require("cors")(corsOptions) : (req, res) => res.sendStatus(204))
+    .use(enableAppCors ? require("cors")(corsOptions) : (req, _res, next) => next())
+    .options("*", enableAppCors ? require("cors")(corsOptions) : (req, res) => res.sendStatus(204))
     // .use(express.static(path.join(__dirname, clientFolder)))
-    .use(bodyParser.json({ limit: "10mb" }))
-    .use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
+    .use(bodyParser.json({ limit: "20mb" }))
+    .use(bodyParser.urlencoded({ limit: '20mb', extended: true }))
     .use(cookieParser())
 
     .use(

@@ -205,6 +205,7 @@ module.exports.getNearestShops = async (req, res) => {
           businessName: 1,
           barangay: 1,
           municipality: 1,
+          logo: 1,
           province: 1,
           address: 1,
           coordinates: {

@@ -27,6 +27,6 @@ module.exports.notify = async (recipient, data = {}) => {
     await sgMail.send(msg);
     console.log('Email sent');
   } catch (error) {
-    console.error(error.response.body);
+    console.error(error.response?.body);
   }
 }

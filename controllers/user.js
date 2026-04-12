@@ -27,6 +27,21 @@ bookController = require(`./../controllers/book`),
   { differenceInMinutes, differenceInSeconds } = require("date-fns"),
   cloudinary = require("./../services/cloudinary");
 
+const getAuthCookieOptions = (maxAgeMs) => {
+  console.log('-------------process.env.NODE_ENV', process.env.NODE_ENV)
+  console.log('-------------process.env.name', process.env.name)
+  const isUAT = process.env.NODE_ENV === "uat";
+  const options = {
+    httpOnly: true,
+    secure: isUAT,
+    sameSite: isUAT ? "none" : "lax",
+    path: "/",
+    maxAge: maxAgeMs,
+  };
+  if (process.env.COOKIE_DOMAIN) options.domain = process.env.COOKIE_DOMAIN;
+  return options;
+};
+
 module.exports.getUser = async (req, res) => {
   try {
     let response = { success: true, code: 200 };
@@ -640,15 +655,15 @@ module.exports.checkOTP = async (req, res) => {
       role: userDetails.user.role,
       shop: userDetails.shop.shop,
       fullname: userDetails.user.fullname,
-      password: userDetails.user.password,
+      // password: userDetails.user.password,
       profile_picture: userDetails.user.profile_picture,
       phoneNumber: userDetails.user.phoneNumber,
       address: userDetails.user.address,
-      isblock: userDetails.user.isblock,
-      company: userDetails.user.company,
-      branch: userDetails.user.branch,
+      // isblock: userDetails.user.isblock,
+      // company: userDetails.user.company,
+      // branch: userDetails.user.branch,
       coordinates: userDetails.user.coordinates,
-      cart: userDetails.user.cart,
+      // cart: userDetails.user.cart,
       spoonwiseAI: userDetails.user.spoonwiseAI
     }
 
@@ -692,25 +707,10 @@ module.exports.checkOTP = async (req, res) => {
 
       await model.addRefreshToken(req, res);
 
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: true,        // important in production must true (HTTPS only)
-        sameSite: "strict",
-        domain: ".spoonwise.space",
-        path: "/",
-        maxAge: 15 * 60 * 1000 // 15 minutes = 900,000 ms
-      });
+      res.cookie("accessToken", accessToken, getAuthCookieOptions(15 * 60 * 1000));
+      res.cookie("refreshToken", refreshToken, getAuthCookieOptions(7 * 24 * 60 * 60 * 1000));
 
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-        domain: ".spoonwise.space",
-        path: "/",
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days = 604,800,000 ms
-      });
-
-      console.log('accessToken', accessToken)
+      console.log('accessToken', accessToken);
 
       response.data = { status: 'OTP_CORRECT', account };
     }
@@ -751,23 +751,8 @@ module.exports.rotateAccessToken = async (req, res) => {
     await model.removeOldRefreshToken(req, res);
     await model.addRefreshToken(req, res);
 
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: true,        // important in production must true (HTTPS only)
-      sameSite: "strict",
-      domain: ".spoonwise.space",
-      path: "/",
-      maxAge: 15 * 60 * 1000 // 15 minutes = 900,000 ms
-    });
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      domain: ".spoonwise.space",
-      path: "/",
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days = 604,800,000 ms
-    });
+    res.cookie("accessToken", accessToken, getAuthCookieOptions(15 * 60 * 1000));
+    res.cookie("refreshToken", refreshToken, getAuthCookieOptions(7 * 24 * 60 * 60 * 1000));
 
     response.data = { status: 'ACCESS_TOKEN_ROTATION_SUCCESS' };
     // }
