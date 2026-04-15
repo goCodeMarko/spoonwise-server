@@ -415,6 +415,11 @@ module.exports.getCart = async (req, res) => {
 
     const MQLBuilder = [
       {
+        $match: {
+          _id: new mongoose.Types.ObjectId(req.auth._id)
+        }
+      },
+      {
         $unwind: {
           path: "$cart"
         }

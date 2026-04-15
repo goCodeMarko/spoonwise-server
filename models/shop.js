@@ -44,10 +44,33 @@ const Shop = mongoose.model("Shop", ShopSchema);
 module.exports = Shop;
 
 module.exports.getShops = async (req, res) => {
+  console.log('-----------req.auth', req.auth)
   try {
+    let buyerCoords = req.auth?.coordinates;
+    const hasCoords = (coords) =>
+      coords &&+
+      coords.lat !== undefined &&
+      coords.lat !== null &&
+      coords.lat !== "" &&
+      coords.lng !== undefined &&
+      coords.lng !== null &&
+      coords.lng !== "";
+
+    if (!hasCoords(buyerCoords)) {
+      const UserModel = mongoose.models.user || mongoose.model("user");
+      const user = await UserModel.findById(req.auth?._id)
+        .select("coordinates")
+        .lean();
+      buyerCoords = user?.coordinates;
+    }
+
+    if (!hasCoords(buyerCoords)) {
+      throw new padayon.BadRequestException("User coordinates not found.");
+    }
+
     const buyer = {
-      lat: req.auth.coordinates.lat,
-      lng: req.auth.coordinates.lng
+      lat: buyerCoords.lat,
+      lng: buyerCoords.lng
     }
 
     const MQLBuilder = [
